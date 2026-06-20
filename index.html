@@ -489,7 +489,15 @@
                     
                     <footer className="text-center p-4 text-xs text-gray-400 border-t bg-gray-50 mt-auto">
                         Aplicación interactiva diseñada para la familia. Los cruces dinámicos se basan en proyecciones del momento.
-                        <img src="https://counter.websiteout.net/compteur.php?S=3&C=1&D=0&ID=tunombreunico123" alt="contador" />
+                        {/* CONTADOR DE VISITAS FUNCIONAL */}
+                        <div className="flex flex-col items-center gap-1">
+                            <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Visitas Familiares</span>
+                            <img 
+                                src="https://api.visitorbadge.io/api/visitors?path=mundial26.alex.familia&labelColor=%23f3f4f6&countColor=%23ea580c&labelStyle=none" 
+                                alt="Contador de visitas" 
+                                className="h-5 shadow-sm rounded-sm"
+                            />
+                        </div>
                     </footer>
                 </div>
             );
