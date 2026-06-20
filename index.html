@@ -73,7 +73,7 @@
             // Grupo E
             { id: 'mE1', group: 'E', home: 'Alemania', away: 'Curazao', hGoals: 7, aGoals: 1, played: true, date: '14 Jun', time: '12:00' },
             { id: 'mE2', group: 'E', home: 'Costa de Marfil', away: 'Ecuador', hGoals: 1, aGoals: 0, played: true, date: '14 Jun', time: '18:00' },
-            { id: 'mE3', group: 'E', home: 'Alemania', away: 'Costa de Marfil', hGoals: 0, aGoals: 0, played: false, date: '20 Jun', time: '15:00' },
+            { id: 'mE3', group: 'E', home: 'Alemania', away: 'Costa de Marfil', hGoals: 2, aGoals: 1, played: true, date: '20 Jun', time: '15:00' },
             { id: 'mE4', group: 'E', home: 'Ecuador', away: 'Curazao', hGoals: 0, aGoals: 0, played: false, date: '20 Jun', time: '19:00' },
             { id: 'mE5', group: 'E', home: 'Ecuador', away: 'Alemania', hGoals: 0, aGoals: 0, played: false, date: '25 Jun', time: '15:00' },
             { id: 'mE6', group: 'E', home: 'Curazao', away: 'Costa de Marfil', hGoals: 0, aGoals: 0, played: false, date: '25 Jun', time: '15:00' },
@@ -126,6 +126,23 @@
             { id: 'mL4', group: 'L', home: 'Panamá', away: 'Croacia', hGoals: 0, aGoals: 0, played: false, date: '23 Jun', time: '18:00' },
             { id: 'mL5', group: 'L', home: 'Panamá', away: 'Inglaterra', hGoals: 0, aGoals: 0, played: false, date: '27 Jun', time: '16:00' },
             { id: 'mL6', group: 'L', home: 'Croacia', away: 'Ghana', hGoals: 0, aGoals: 0, played: false, date: '27 Jun', time: '16:00' }
+        ];
+
+        // NUEVAS TABLAS DE ESTADÍSTICAS (Puedes actualizar los números aquí)
+        const GOLEADORES = [
+            { name: "J. David", team: "Canadá", played: 2, count: 3 },
+            { name: "L. Messi", team: "Argentina", played: 1, count: 3 },
+            { name: "I. Saibari", team: "Marruecos", played: 2, count: 2 },
+            { name: "Vinicius", team: "Brasil", played: 2, count: 2 },
+            { name: "F. Balogun", team: "Estados Unidos", played: 2, count: 2 }
+        ];
+
+        const ASISTENCIAS = [
+            { name: "J. Enciso", team: "Paraguay", played: 2, count: 2 },
+            { name: "B. Díaz", team: "Marruecos", played: 2, count: 2 },
+            { name: "C. Wood", team: "Nueva Zelanda", played: 1, count: 2 },
+            { name: "A. Isak", team: "Suecia", played: 1, count: 2 },
+            { name: "J. Kimmich", team: "Alemania", played: 1, count: 2 }
         ];
 
         const calculateStandings = () => {
@@ -229,7 +246,7 @@
                                 </table>
                             </div>
                             
-                            {/* Sección de Partidos del Grupo (FIX MARCADOR APLICADO AQUI) */}
+                            {/* Sección de Partidos del Grupo */}
                             <div className="mt-4 pt-3 border-t border-gray-100">
                                 <div className="flex justify-between items-center mb-2">
                                     <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wide">Partidos del Grupo</h3>
@@ -248,7 +265,6 @@
                                                     <span className="truncate">{m.home}</span>
                                                 </div>
                                                 
-                                                {/* FIX UX MARCADOR: whitespace-nowrap e inline-block añadidos */}
                                                 <div className="px-2 font-bold text-[12px] shrink-0 text-center">
                                                     {m.played ? (
                                                         <span className="bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded whitespace-nowrap inline-block">{m.hGoals} - {m.aGoals}</span>
@@ -275,7 +291,7 @@
         const KnockoutView = ({ standings, bestThirds }) => {
             const getTeam = (group, pos) => standings[group] && standings[group][pos-1] ? standings[group][pos-1] : { name: `TBD (Grp ${group})` };
             
-            // Reglas FIFA OFICIALES (Partidos 73 al 88)
+            // Reglas FIFA OFICIALES
             const fixedMatches = [
                 { title: "P73: 2º Grupo A vs 2º Grupo B", t1: getTeam('A',2), t2: getTeam('B',2), date: '28 Jun', venue: 'Los Ángeles' },
                 { title: "P75: 1º Grupo F vs 2º Grupo C", t1: getTeam('F',1), t2: getTeam('C',2), date: '29 Jun', venue: 'Monterrey' },
@@ -298,14 +314,14 @@
                 { title: "P87: 1º Grupo K vs 3º D/E/I/J/L", leader: getTeam('K',1), targets: ['D','E','I','J','L'], date: '3 Jul', venue: 'Kansas City' }
             ];
 
-            // ALGORITMO ANTIDUPLICADOS: Asigna los 3ros lugares a 1 solo cupo disponible
+            // ALGORITMO ANTIDUPLICADOS
             let availableThirds = [...bestThirds];
             const dynamicMatches = dynamicMatchesRaw.map(m => {
                 const teamIdx = availableThirds.findIndex(t => m.targets.includes(t.group));
                 let assigned = null;
                 if (teamIdx !== -1) {
                     assigned = availableThirds[teamIdx];
-                    availableThirds.splice(teamIdx, 1); // Lo remueve para no repetirlo
+                    availableThirds.splice(teamIdx, 1); 
                 }
                 return {
                     ...m,
@@ -314,7 +330,6 @@
                 };
             });
 
-            // Tarjeta de Partido Unificada (Limpia la UX)
             const MatchCard = ({ matchInfo, type }) => {
                 const isDynamic = type === 'dynamic';
                 const borderColor = isDynamic ? 'border-orange-400' : 'border-blue-500';
@@ -322,7 +337,7 @@
 
                 return (
                     <div className={`card p-3 mb-3 border-l-4 ${borderColor}`}>
-                        {/* Cabecera con fecha y sede */}
+                        {/* Cabecera */}
                         <div className="flex justify-between items-center mb-3 pb-1.5 border-b border-gray-100">
                             <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wide">{matchInfo.title}</span>
                             <div className="flex gap-2 text-[10px] text-gray-500 font-medium bg-gray-50 px-2 py-0.5 rounded">
@@ -444,6 +459,60 @@
             );
         };
 
+        // NUEVO COMPONENTE: Vista de Estadísticas
+        const StatsView = () => {
+            const renderRow = (item, index, icon) => (
+                <div key={index} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors px-2 rounded">
+                    <div className="flex items-center gap-3">
+                        <span className={`w-5 text-center font-bold ${index === 0 ? 'text-yellow-500 text-lg' : index === 1 ? 'text-gray-400' : index === 2 ? 'text-amber-700' : 'text-gray-300'}`}>
+                            {index + 1}
+                        </span>
+                        <div>
+                            <p className="font-bold text-gray-900 text-sm leading-tight">{item.name}</p>
+                            <div className="flex items-center gap-1.5 mt-1">
+                                <img src={getFlagUrl(item.team)} className="w-4 h-3 rounded-[1px] shadow-sm" />
+                                <span className="text-xs text-gray-500">{item.team}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-5 text-sm">
+                        <div className="flex flex-col items-center">
+                            <span className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">PJ</span>
+                            <span className="text-gray-600 font-medium">{item.played}</span>
+                        </div>
+                        <div className="flex flex-col items-center min-w-[32px] bg-gray-50 rounded px-1.5 py-1">
+                            <span className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">{icon === '⚽' ? 'Goles' : 'Asist.'}</span>
+                            <span className="font-black text-gray-900 flex items-center gap-1">
+                                {item.count} <span className="text-[10px]">{icon}</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            return (
+                <div className="space-y-6 pb-12">
+                    <div className="card p-4 border-t-4 border-yellow-400">
+                        <h2 className="text-xl font-extrabold text-gray-800 mb-4 flex items-center gap-2">
+                            <span>Goleadores</span>
+                        </h2>
+                        <div className="flex flex-col">
+                            {GOLEADORES.map((item, idx) => renderRow(item, idx, '⚽'))}
+                        </div>
+                    </div>
+
+                    <div className="card p-4 border-t-4 border-blue-400">
+                        <h2 className="text-xl font-extrabold text-gray-800 mb-4 flex items-center gap-2">
+                            <span>Asistencias</span>
+                        </h2>
+                        <div className="flex flex-col">
+                            {ASISTENCIAS.map((item, idx) => renderRow(item, idx, '👟'))}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
         function App() {
             const [activeTab, setActiveTab] = React.useState('grupos');
             
@@ -461,7 +530,7 @@
                 return b.gf - a.gf;
             }).slice(0, 8); // Top 8
 
-            // FIX FECHA DINÁMICA: Calcula el día basado en los partidos jugados
+            // FIX FECHA DINÁMICA
             const playedMatches = MATCHES.filter(m => m.played);
             let latestDate = "19 Junio";
             if (playedMatches.length > 0) {
@@ -485,29 +554,34 @@
                             </div>
                         </div>
 
-                        {/* Tabs Navigation */}
-                        <div className="flex gap-6 mt-6 border-b border-white/20">
+                        {/* Tabs Navigation (Ahora con scroll horizontal para la 3ra pestaña) */}
+                        <div className="flex gap-6 mt-6 border-b border-white/20 overflow-x-auto hide-scrollbar">
                             <button 
                                 onClick={() => setActiveTab('grupos')}
-                                className={`pb-2 px-1 text-sm transition-all duration-300 ${activeTab === 'grupos' ? 'border-b-4 border-teal-400 font-bold text-white' : 'text-teal-200/80 hover:text-white'}`}
+                                className={`pb-2 px-1 text-sm whitespace-nowrap transition-all duration-300 ${activeTab === 'grupos' ? 'border-b-4 border-teal-400 font-bold text-white' : 'text-teal-200/80 hover:text-white'}`}
                             >
                                 Tablas de Grupos
                             </button>
                             <button 
                                 onClick={() => setActiveTab('cruces')}
-                                className={`pb-2 px-1 text-sm transition-all duration-300 ${activeTab === 'cruces' ? 'border-b-4 border-orange-400 font-bold text-white' : 'text-teal-200/80 hover:text-white'}`}
+                                className={`pb-2 px-1 text-sm whitespace-nowrap transition-all duration-300 ${activeTab === 'cruces' ? 'border-b-4 border-orange-400 font-bold text-white' : 'text-teal-200/80 hover:text-white'}`}
                             >
                                 Camino a la Final
+                            </button>
+                            <button 
+                                onClick={() => setActiveTab('estadisticas')}
+                                className={`pb-2 px-1 text-sm whitespace-nowrap transition-all duration-300 ${activeTab === 'estadisticas' ? 'border-b-4 border-yellow-400 font-bold text-white' : 'text-teal-200/80 hover:text-white'}`}
+                            >
+                                Estadísticas
                             </button>
                         </div>
                     </header>
 
                     {/* Content Area */}
                     <main className="flex-1 p-4 mt-2">
-                        {activeTab === 'grupos' 
-                            ? <StandingsView standings={standings} bestThirds={bestThirds} /> 
-                            : <KnockoutView standings={standings} bestThirds={bestThirds} />
-                        }
+                        {activeTab === 'grupos' && <StandingsView standings={standings} bestThirds={bestThirds} />}
+                        {activeTab === 'cruces' && <KnockoutView standings={standings} bestThirds={bestThirds} />}
+                        {activeTab === 'estadisticas' && <StatsView />}
                     </main>
                     
                     <footer className="flex flex-col items-center justify-center p-5 text-xs text-gray-400 border-t bg-gray-50 mt-auto gap-4">
