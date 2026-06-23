@@ -126,7 +126,7 @@
             // Grupo K
             { id: 'mK1', group: 'K', home: 'Portugal', away: 'RD Congo', hGoals: 1, aGoals: 1, played: true, date: '17 Jun', time: '12:00' },
             { id: 'mK2', group: 'K', home: 'Uzbekistán', away: 'Colombia', hGoals: 1, aGoals: 3, played: true, date: '17 Jun', time: '21:00' },
-            { id: 'mK3', group: 'K', home: 'Portugal', away: 'Uzbekistán', hGoals: 0, aGoals: 0, played: false, date: '23 Jun', time: '12:00' },
+            { id: 'mK3', group: 'K', home: 'Portugal', away: 'Uzbekistán', hGoals: 2, aGoals: 0, played: 'live', date: '23 Jun', time: '12:00' },
             { id: 'mK4', group: 'K', home: 'Colombia', away: 'RD Congo', hGoals: 0, aGoals: 0, played: false, date: '23 Jun', time: '21:00' },
             { id: 'mK5', group: 'K', home: 'Colombia', away: 'Portugal', hGoals: 0, aGoals: 0, played: false, date: '27 Jun', time: '18:30' },
             { id: 'mK6', group: 'K', home: 'RD Congo', away: 'Uzbekistán', hGoals: 0, aGoals: 0, played: false, date: '27 Jun', time: '18:30' },
@@ -139,7 +139,6 @@
             { id: 'mL6', group: 'L', home: 'Croacia', away: 'Ghana', hGoals: 0, aGoals: 0, played: false, date: '27 Jun', time: '16:00' }
         ];
 
-        // NUEVAS TABLAS DE ESTADÍSTICAS (Puedes actualizar los números aquí)
         const GOLEADORES = [
             { name: "L. Messi", team: "Argentina", played: 2, count: 5 },
             { name: "K. Mbappe", team: "Francia", played: 2, count: 4 },
@@ -265,10 +264,10 @@
                                 </div>
                                 <div className="space-y-1.5">
                                     {MATCHES.filter(m => m.group === groupName).map(m => (
-                                        <div key={m.id} className={`flex justify-between items-center text-[11px] p-2 rounded ${m.played ? 'bg-gray-50' : 'bg-white border border-gray-100'}`}>
+                                        <div key={m.id} className={`flex justify-between items-center text-[11px] p-2 rounded transition-colors ${m.played === 'live' ? 'bg-red-50/60 border border-red-200' : m.played ? 'bg-gray-50' : 'bg-white border border-gray-100'}`}>
                                             <div className="flex gap-1.5 text-gray-500 w-20 shrink-0">
                                                 <span>{m.date}</span> 
-                                                <span className="font-bold text-blue-900">{m.time}</span>
+                                                <span className={`${m.played === 'live' ? 'font-black text-red-600' : 'font-bold text-blue-900'}`}>{m.time}</span>
                                             </div>
                                             <div className="flex-1 flex justify-between items-center px-2 min-w-0">
                                                 <div className={`flex items-center gap-1.5 flex-1 min-w-0 ${m.played && m.hGoals > m.aGoals ? 'font-bold text-gray-900' : 'text-gray-600'}`}>
@@ -276,11 +275,16 @@
                                                     <span className="truncate">{m.home}</span>
                                                 </div>
                                                 
-                                                <div className="px-2 font-bold text-[12px] shrink-0 text-center">
+                                                <div className="px-2 font-bold text-[12px] shrink-0 text-center flex flex-col items-center justify-center">
+                                                    {m.played === 'live' && (
+                                                        <span className="text-[8px] bg-red-600 text-white px-1.5 py-[2px] rounded animate-pulse mb-0.5 font-black tracking-widest leading-none shadow-sm">LIVE</span>
+                                                    )}
                                                     {m.played ? (
-                                                        <span className="bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded whitespace-nowrap inline-block">{m.hGoals} - {m.aGoals}</span>
+                                                        <span className={`${m.played === 'live' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'} px-1.5 py-0.5 rounded whitespace-nowrap inline-block leading-none`}>
+                                                            {m.hGoals} - {m.aGoals}
+                                                        </span>
                                                     ) : (
-                                                        <span className="text-gray-300 whitespace-nowrap inline-block">vs</span>
+                                                        <span className="text-gray-300 whitespace-nowrap inline-block leading-none mt-1">vs</span>
                                                     )}
                                                 </div>
 
@@ -470,7 +474,6 @@
             );
         };
 
-        // NUEVO COMPONENTE: Vista de Estadísticas
         const StatsView = () => {
             const renderRow = (item, index, icon) => (
                 <div key={index} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors px-2 rounded">
@@ -565,7 +568,7 @@
                             </div>
                         </div>
 
-                        {/* Tabs Navigation (Ahora con scroll horizontal para la 3ra pestaña) */}
+                        {/* Tabs Navigation */}
                         <div className="flex gap-6 mt-6 border-b border-white/20 overflow-x-auto hide-scrollbar">
                             <button 
                                 onClick={() => setActiveTab('grupos')}
