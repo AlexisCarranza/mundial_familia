@@ -389,21 +389,55 @@
                 { title: "P87: 1º Grupo K vs 3º D/E/I/J/L", leader: getTeam('K',1), targets: ['D','E','I','J','L'], date: '3 Jul', time: '20:30', venue: 'Kansas City' }
             ];
 
-            // ALGORITMO ANTIDUPLICADOS
+            // ALGORITMO ANTIDUPLICADOS MEJORADO (Smart Allocation)
             let availableThirds = [...bestThirds];
-            const dynamicMatches = dynamicMatchesRaw.map(m => {
-                const teamIdx = availableThirds.findIndex(t => m.targets.includes(t.group));
-                let assigned = null;
-                if (teamIdx !== -1) {
-                    assigned = availableThirds[teamIdx];
-                    availableThirds.splice(teamIdx, 1); 
+            let assignedMatches = dynamicMatchesRaw.map(m => ({ ...m, t2: null }));
+
+            let changed = true;
+            while (changed && availableThirds.length > 0) {
+                changed = false;
+                
+                // 1. Contar cuántas opciones válidas tiene cada partido sin asignar
+                const optionsCount = assignedMatches.map(m => 
+                    m.t2 ? 999 : availableThirds.filter(t => m.targets.includes(t.group)).length
+                );
+                
+                // 2. Encontrar el partido con la MENOR cantidad de opciones (> 0)
+                let minOptions = 999;
+                let matchIdx = -1;
+                for (let i = 0; i < optionsCount.length; i++) {
+                    if (optionsCount[i] > 0 && optionsCount[i] < minOptions) {
+                        minOptions = optionsCount[i];
+                        matchIdx = i;
+                    }
                 }
-                return {
-                    ...m,
-                    t1: m.leader,
-                    t2: assigned || { name: `TBD (3º ${m.targets.join('/')})`, isTBD: true }
-                };
-            });
+
+                // 3. Asignar el mejor tercero disponible a ese partido
+                if (matchIdx !== -1) {
+                    const m = assignedMatches[matchIdx];
+                    const validThirds = availableThirds.filter(t => m.targets.includes(t.group));
+                    const selected = validThirds[0]; // El de más puntos
+                    
+                    assignedMatches[matchIdx].t2 = selected;
+                    availableThirds = availableThirds.filter(t => t.name !== selected.name);
+                    changed = true;
+                }
+            }
+
+            // 4. FALLBACK DE SEGURIDAD: Si por proyecciones parciales algún partido se quedó sin opción válida,
+            // le forzamos cualquiera de los mejores 3ros que hayan sobrado para evitar un feo "TBD".
+            for (let i = 0; i < assignedMatches.length; i++) {
+                if (!assignedMatches[i].t2 && availableThirds.length > 0) {
+                    assignedMatches[i].t2 = availableThirds.shift();
+                } else if (!assignedMatches[i].t2) {
+                    assignedMatches[i].t2 = { name: `TBD (3º ${assignedMatches[i].targets.join('/')})`, isTBD: true };
+                }
+            }
+
+            const dynamicMatches = assignedMatches.map(m => ({
+                ...m,
+                t1: m.leader
+            }));
 
             const MatchCard = ({ matchInfo, type }) => {
                 const isDynamic = type === 'dynamic';
