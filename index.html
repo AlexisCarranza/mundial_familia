@@ -126,14 +126,14 @@
             // Grupo K
             { id: 'mK1', group: 'K', home: 'Portugal', away: 'RD Congo', hGoals: 1, aGoals: 1, played: true, date: '17 Jun', time: '12:00' },
             { id: 'mK2', group: 'K', home: 'Uzbekistán', away: 'Colombia', hGoals: 1, aGoals: 3, played: true, date: '17 Jun', time: '21:00' },
-            { id: 'mK3', group: 'K', home: 'Portugal', away: 'Uzbekistán', hGoals: 5, aGoals: 0, played: 'true', date: '23 Jun', time: '12:00' },
+            { id: 'mK3', group: 'K', home: 'Portugal', away: 'Uzbekistán', hGoals: 5, aGoals: 0, played: true, date: '23 Jun', time: '12:00' },
             { id: 'mK4', group: 'K', home: 'Colombia', away: 'RD Congo', hGoals: 0, aGoals: 0, played: false, date: '23 Jun', time: '21:00' },
             { id: 'mK5', group: 'K', home: 'Colombia', away: 'Portugal', hGoals: 0, aGoals: 0, played: false, date: '27 Jun', time: '18:30' },
             { id: 'mK6', group: 'K', home: 'RD Congo', away: 'Uzbekistán', hGoals: 0, aGoals: 0, played: false, date: '27 Jun', time: '18:30' },
             // Grupo L
             { id: 'mL1', group: 'L', home: 'Inglaterra', away: 'Croacia', hGoals: 4, aGoals: 2, played: true, date: '17 Jun', time: '15:00' },
             { id: 'mL2', group: 'L', home: 'Ghana', away: 'Panamá', hGoals: 1, aGoals: 0, played: true, date: '17 Jun', time: '18:00' },
-            { id: 'mL3', group: 'L', home: 'Inglaterra', away: 'Ghana', hGoals: 0, aGoals: 0, played: false, date: '23 Jun', time: '15:00' },
+            { id: 'mL3', group: 'L', home: 'Inglaterra', away: 'Ghana', hGoals: 0, aGoals: 0, played: live, date: '23 Jun', time: '15:00' },
             { id: 'mL4', group: 'L', home: 'Panamá', away: 'Croacia', hGoals: 0, aGoals: 0, played: false, date: '23 Jun', time: '18:00' },
             { id: 'mL5', group: 'L', home: 'Panamá', away: 'Inglaterra', hGoals: 0, aGoals: 0, played: false, date: '27 Jun', time: '16:00' },
             { id: 'mL6', group: 'L', home: 'Croacia', away: 'Ghana', hGoals: 0, aGoals: 0, played: false, date: '27 Jun', time: '16:00' }
@@ -194,6 +194,55 @@
                 });
             }
             return sortedGroups;
+        };
+
+        // NUEVO COMPONENTE: Carrusel de Partidos del Día
+        const TodayMatchesCarousel = ({ matches, todayLabel }) => {
+            if (!matches || matches.length === 0) return null;
+            return (
+                <div className="mb-6 -mx-4 px-4">
+                    <div className="flex justify-between items-center mb-3">
+                        <h3 className="text-sm font-bold text-gray-800 flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                            Partidos del Día
+                        </h3>
+                        <span className="text-xs text-gray-500 font-medium px-2 py-0.5 bg-gray-100 rounded">{todayLabel}</span>
+                    </div>
+                    <div className="flex overflow-x-auto gap-3 hide-scrollbar pb-2 snap-x">
+                        {matches.map(m => (
+                            <div key={m.id} className={`shrink-0 w-[220px] snap-center card p-3 border-l-4 ${m.played === 'live' ? 'border-red-500 bg-red-50/40' : m.played ? 'border-gray-300' : 'border-blue-500'}`}>
+                                <div className="flex justify-between items-center text-[10px] text-gray-500 mb-2 font-medium">
+                                    <span>Grupo {m.group}</span>
+                                    <span className={m.played === 'live' ? 'text-red-600 font-bold flex items-center gap-1' : ''}>
+                                        {m.played === 'live' && <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse block"></span>}
+                                        {m.time} COL
+                                    </span>
+                                </div>
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <div className="flex items-center gap-2">
+                                            <img src={getFlagUrl(m.home)} className="w-4 h-3 rounded-[2px] shadow-sm" />
+                                            <span className={`text-sm ${m.played && m.hGoals > m.aGoals ? 'font-bold text-gray-900' : 'font-medium text-gray-700'}`}>{m.home}</span>
+                                        </div>
+                                        <span className={`text-sm font-bold ${m.played === 'live' ? 'text-red-600' : 'text-gray-900'}`}>
+                                            {m.played ? m.hGoals : '-'}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <div className="flex items-center gap-2">
+                                            <img src={getFlagUrl(m.away)} className="w-4 h-3 rounded-[2px] shadow-sm" />
+                                            <span className={`text-sm ${m.played && m.aGoals > m.hGoals ? 'font-bold text-gray-900' : 'font-medium text-gray-700'}`}>{m.away}</span>
+                                        </div>
+                                        <span className={`text-sm font-bold ${m.played === 'live' ? 'text-red-600' : 'text-gray-900'}`}>
+                                            {m.played ? m.aGoals : '-'}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
         };
 
         const StandingsView = ({ standings, bestThirds }) => {
@@ -308,25 +357,25 @@
             
             // Reglas FIFA OFICIALES
             const fixedMatches = [
-                { title: "P73: 2º Grupo A vs 2º Grupo B", t1: getTeam('A',2), t2: getTeam('B',2), date: '28 Jun', venue: 'Los Ángeles' },
-                { title: "P75: 1º Grupo F vs 2º Grupo C", t1: getTeam('F',1), t2: getTeam('C',2), date: '29 Jun', venue: 'Monterrey' },
-                { title: "P76: 1º Grupo C vs 2º Grupo F", t1: getTeam('C',1), t2: getTeam('F',2), date: '29 Jun', venue: 'Houston' },
-                { title: "P78: 2º Grupo E vs 2º Grupo I", t1: getTeam('E',2), t2: getTeam('I',2), date: '30 Jun', venue: 'Dallas' },
-                { title: "P83: 2º Grupo K vs 2º Grupo L", t1: getTeam('K',2), t2: getTeam('L',2), date: '2 Jul', venue: 'Toronto' },
-                { title: "P84: 1º Grupo H vs 2º Grupo J", t1: getTeam('H',1), t2: getTeam('J',2), date: '2 Jul', venue: 'Los Ángeles' },
-                { title: "P86: 1º Grupo J vs 2º Grupo H", t1: getTeam('J',1), t2: getTeam('H',2), date: '3 Jul', venue: 'Miami' },
-                { title: "P88: 2º Grupo D vs 2º Grupo G", t1: getTeam('D',2), t2: getTeam('G',2), date: '3 Jul', venue: 'Dallas' }
+                { title: "P73: 2º Grupo A vs 2º Grupo B", t1: getTeam('A',2), t2: getTeam('B',2), date: '28 Jun', time: '14:00', venue: 'Los Ángeles' },
+                { title: "P75: 1º Grupo F vs 2º Grupo C", t1: getTeam('F',1), t2: getTeam('C',2), date: '29 Jun', time: '20:00', venue: 'Monterrey' },
+                { title: "P76: 1º Grupo C vs 2º Grupo F", t1: getTeam('C',1), t2: getTeam('F',2), date: '29 Jun', time: '12:00', venue: 'Houston' },
+                { title: "P78: 2º Grupo E vs 2º Grupo I", t1: getTeam('E',2), t2: getTeam('I',2), date: '30 Jun', time: '12:00', venue: 'Dallas' },
+                { title: "P83: 2º Grupo K vs 2º Grupo L", t1: getTeam('K',2), t2: getTeam('L',2), date: '2 Jul', time: '18:00', venue: 'Toronto' },
+                { title: "P84: 1º Grupo H vs 2º Grupo J", t1: getTeam('H',1), t2: getTeam('J',2), date: '2 Jul', time: '14:00', venue: 'Los Ángeles' },
+                { title: "P86: 1º Grupo J vs 2º Grupo H", t1: getTeam('J',1), t2: getTeam('H',2), date: '3 Jul', time: '17:00', venue: 'Miami' },
+                { title: "P88: 2º Grupo D vs 2º Grupo G", t1: getTeam('D',2), t2: getTeam('G',2), date: '3 Jul', time: '13:00', venue: 'Dallas' }
             ];
 
             const dynamicMatchesRaw = [
-                { title: "P74: 1º Grupo E vs 3º A/B/C/D/F", leader: getTeam('E',1), targets: ['A','B','C','D','F'], date: '29 Jun', venue: 'Boston' },
-                { title: "P77: 1º Grupo I vs 3º C/D/F/G/H", leader: getTeam('I',1), targets: ['C','D','F','G','H'], date: '30 Jun', venue: 'Nueva York/NJ' },
-                { title: "P79: 1º Grupo A vs 3º C/E/F/H/I", leader: getTeam('A',1), targets: ['C','E','F','H','I'], date: '30 Jun', venue: 'CDMX' },
-                { title: "P80: 1º Grupo L vs 3º E/H/I/J/K", leader: getTeam('L',1), targets: ['E','H','I','J','K'], date: '1 Jul', venue: 'Atlanta' },
-                { title: "P81: 1º Grupo D vs 3º B/E/F/I/J", leader: getTeam('D',1), targets: ['B','E','F','I','J'], date: '1 Jul', venue: 'San Francisco' },
-                { title: "P82: 1º Grupo G vs 3º A/E/H/I/J", leader: getTeam('G',1), targets: ['A','E','H','I','J'], date: '1 Jul', venue: 'Seattle' },
-                { title: "P85: 1º Grupo B vs 3º E/F/G/I/J", leader: getTeam('B',1), targets: ['E','F','G','I','J'], date: '2 Jul', venue: 'Vancouver' },
-                { title: "P87: 1º Grupo K vs 3º D/E/I/J/L", leader: getTeam('K',1), targets: ['D','E','I','J','L'], date: '3 Jul', venue: 'Kansas City' }
+                { title: "P74: 1º Grupo E vs 3º A/B/C/D/F", leader: getTeam('E',1), targets: ['A','B','C','D','F'], date: '29 Jun', time: '15:30', venue: 'Boston' },
+                { title: "P77: 1º Grupo I vs 3º C/D/F/G/H", leader: getTeam('I',1), targets: ['C','D','F','G','H'], date: '30 Jun', time: '16:00', venue: 'Nueva York/NJ' },
+                { title: "P79: 1º Grupo A vs 3º C/E/F/H/I", leader: getTeam('A',1), targets: ['C','E','F','H','I'], date: '30 Jun', time: '20:00', venue: 'CDMX' },
+                { title: "P80: 1º Grupo L vs 3º E/H/I/J/K", leader: getTeam('L',1), targets: ['E','H','I','J','K'], date: '1 Jul', time: '11:00', venue: 'Atlanta' },
+                { title: "P81: 1º Grupo D vs 3º B/E/F/I/J", leader: getTeam('D',1), targets: ['B','E','F','I','J'], date: '1 Jul', time: '19:00', venue: 'San Francisco' },
+                { title: "P82: 1º Grupo G vs 3º A/E/H/I/J", leader: getTeam('G',1), targets: ['A','E','H','I','J'], date: '1 Jul', time: '15:00', venue: 'Seattle' },
+                { title: "P85: 1º Grupo B vs 3º E/F/G/I/J", leader: getTeam('B',1), targets: ['E','F','G','I','J'], date: '2 Jul', time: '22:00', venue: 'Vancouver' },
+                { title: "P87: 1º Grupo K vs 3º D/E/I/J/L", leader: getTeam('K',1), targets: ['D','E','I','J','L'], date: '3 Jul', time: '20:30', venue: 'Kansas City' }
             ];
 
             // ALGORITMO ANTIDUPLICADOS
@@ -356,7 +405,7 @@
                         <div className="flex justify-between items-center mb-3 pb-1.5 border-b border-gray-100">
                             <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wide">{matchInfo.title}</span>
                             <div className="flex gap-2 text-[10px] text-gray-500 font-medium bg-gray-50 px-2 py-0.5 rounded">
-                                <span>🗓️ {matchInfo.date}</span>
+                                <span>🗓️ {matchInfo.date} • {matchInfo.time} COL</span>
                                 <span>📍 {matchInfo.venue}</span>
                             </div>
                         </div>
@@ -449,24 +498,24 @@
                             <div className="flex gap-2 justify-center">
                                 <div className="card p-3 bg-gray-50 border border-gray-200 text-center flex flex-col items-center justify-center w-1/2">
                                     <span className="font-bold text-gray-600 text-sm">Semifinal 1</span>
-                                    <span className="text-[10px] text-gray-400 mt-0.5">14 Jul - Dallas</span>
+                                    <span className="text-[10px] text-gray-400 mt-0.5">14 Jul - 14:00 COL | Dallas</span>
                                 </div>
                                 <div className="card p-3 bg-gray-50 border border-gray-200 text-center flex flex-col items-center justify-center w-1/2">
                                     <span className="font-bold text-gray-600 text-sm">Semifinal 2</span>
-                                    <span className="text-[10px] text-gray-400 mt-0.5">15 Jul - Atlanta</span>
+                                    <span className="text-[10px] text-gray-400 mt-0.5">15 Jul - 14:00 COL | Atlanta</span>
                                 </div>
                             </div>
 
                             <div className="flex gap-2 justify-center">
                                  <div className="card p-3 bg-gray-50 border border-gray-200 text-center flex flex-col items-center justify-center w-full">
                                     <span className="font-bold text-gray-600 text-sm">3er Puesto</span>
-                                    <span className="text-[10px] text-gray-400 mt-0.5">18 Jul - Miami</span>
+                                    <span className="text-[10px] text-gray-400 mt-0.5">18 Jul - 16:00 COL | Miami</span>
                                 </div>
                             </div>
 
                             <div className="card p-4 bg-gradient-to-r from-gray-200 to-gray-300 border-2 border-gray-300 text-center flex flex-col items-center justify-center shadow-inner mt-2">
                                 <span className="font-black text-gray-700 uppercase tracking-widest">Gran Final</span>
-                                <span className="text-xs font-bold text-gray-600 mt-1">19 Jul - Nueva York/NJ</span>
+                                <span className="text-xs font-bold text-gray-600 mt-1">19 Jul - 14:00 COL | Nueva York/NJ</span>
                             </div>
                         </div>
                     </div>
@@ -530,6 +579,11 @@
         function App() {
             const [activeTab, setActiveTab] = React.useState('grupos');
             
+            // Efecto para hacer scroll al inicio al cambiar de pestaña
+            React.useEffect(() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, [activeTab]);
+
             // Cálculos principales
             const standings = calculateStandings();
             
@@ -544,14 +598,48 @@
                 return b.gf - a.gf;
             }).slice(0, 8); // Top 8
 
-            // FIX FECHA DINÁMICA
-            const playedMatches = MATCHES.filter(m => m.played);
-            let latestDate = "19 Junio";
+            // FIX FECHA DINÁMICA (AHORA SOPORTA JULIO)
+            const playedMatches = MATCHES.filter(m => m.played === true || m.played === 'live');
+            let latestDateObj = { date: "19 Jun" };
             if (playedMatches.length > 0) {
-                const days = playedMatches.map(m => parseInt(m.date.split(' ')[0]));
-                const maxDay = Math.max(...days.filter(d => !isNaN(d)));
-                if (maxDay > 0) latestDate = `${maxDay} Junio`;
+                latestDateObj = playedMatches.reduce((latest, current) => {
+                    const getScore = (dateStr) => {
+                        const [d, m] = dateStr.split(' ');
+                        return (m.startsWith('Jul') ? 700 : 600) + parseInt(d);
+                    };
+                    return getScore(current.date) > getScore(latest.date) ? current : latest;
+                });
             }
+            const [dDay, dMonth] = latestDateObj.date.split(' ');
+            const latestDate = `${dDay} ${dMonth.startsWith('Jul') ? 'Julio' : 'Junio'}`;
+
+            // LÓGICA DEL CARRUSEL MEJORADA: Buscar partidos del día cronológicamente
+            const activeMatches = MATCHES.filter(m => m.played === 'live');
+            let currentDayMatches = [];
+            let todayLabel = "";
+
+            if (activeMatches.length > 0) {
+                todayLabel = activeMatches[0].date;
+            } else {
+                const unplayedMatches = MATCHES.filter(m => m.played === false);
+                if (unplayedMatches.length > 0) {
+                    // Ordenamos cronológicamente para encontrar el VERDADERO próximo partido
+                    unplayedMatches.sort((a, b) => {
+                        const getScore = (dateStr) => {
+                            const [d, m] = dateStr.split(' ');
+                            return (m.startsWith('Jul') ? 700 : 600) + parseInt(d);
+                        };
+                        return getScore(a.date) - getScore(b.date);
+                    });
+                    todayLabel = unplayedMatches[0].date;
+                } else {
+                    todayLabel = MATCHES[MATCHES.length - 1].date;
+                }
+            }
+            
+            currentDayMatches = MATCHES.filter(m => m.date === todayLabel);
+            // Ordenar el carrusel por hora
+            currentDayMatches.sort((a, b) => a.time.localeCompare(b.time));
 
             return (
                 <div className="max-w-md mx-auto min-h-screen relative flex flex-col">
@@ -593,7 +681,12 @@
 
                     {/* Content Area */}
                     <main className="flex-1 p-4 mt-2">
-                        {activeTab === 'grupos' && <StandingsView standings={standings} bestThirds={bestThirds} />}
+                        {activeTab === 'grupos' && (
+                            <>
+                                <TodayMatchesCarousel matches={currentDayMatches} todayLabel={todayLabel} />
+                                <StandingsView standings={standings} bestThirds={bestThirds} />
+                            </>
+                        )}
                         {activeTab === 'cruces' && <KnockoutView standings={standings} bestThirds={bestThirds} />}
                         {activeTab === 'estadisticas' && <StatsView />}
                     </main>
