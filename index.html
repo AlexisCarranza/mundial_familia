@@ -196,11 +196,11 @@
             return sortedGroups;
         };
 
-        // NUEVO COMPONENTE: Carrusel de Partidos del Día
+        // UX MEJORADO: Lista vertical compacta para los partidos del día (Adiós scroll horizontal)
         const TodayMatchesCarousel = ({ matches, todayLabel }) => {
             if (!matches || matches.length === 0) return null;
             return (
-                <div className="mb-6 -mx-4 px-4">
+                <div className="mb-6">
                     <div className="flex justify-between items-center mb-3">
                         <h3 className="text-sm font-bold text-gray-800 flex items-center gap-2">
                             <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
@@ -208,35 +208,46 @@
                         </h3>
                         <span className="text-xs text-gray-500 font-medium px-2 py-0.5 bg-gray-100 rounded">{todayLabel}</span>
                     </div>
-                    <div className="flex overflow-x-auto gap-3 hide-scrollbar pb-2 snap-x">
+                    
+                    <div className="flex flex-col gap-2">
                         {matches.map(m => (
-                            <div key={m.id} className={`shrink-0 w-[220px] snap-center card p-3 border-l-4 ${m.played === 'live' ? 'border-red-500 bg-red-50/40' : m.played ? 'border-gray-300' : 'border-blue-500'}`}>
-                                <div className="flex justify-between items-center text-[10px] text-gray-500 mb-2 font-medium">
-                                    <span>Grupo {m.group}</span>
-                                    <span className={m.played === 'live' ? 'text-red-600 font-bold flex items-center gap-1' : ''}>
-                                        {m.played === 'live' && <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse block"></span>}
-                                        {m.time} COL
-                                    </span>
+                            <div key={m.id} className={`card p-2 border-l-4 flex justify-between items-center transition-all ${m.played === 'live' ? 'border-red-500 bg-red-50/60 ring-1 ring-red-100 shadow-sm' : m.played ? 'border-gray-300 bg-gray-50/50' : 'border-blue-500 bg-white'}`}>
+                                
+                                {/* Info Grupo y Hora */}
+                                <div className="flex flex-col items-center justify-center w-[48px] shrink-0 border-r border-gray-100/80 pr-2 mr-2 py-1">
+                                    <span className="text-[9px] font-black text-gray-400 tracking-wider">GRP {m.group}</span>
+                                    <span className={`text-[10px] font-bold mt-0.5 ${m.played === 'live' ? 'text-red-600' : 'text-gray-600'}`}>{m.time}</span>
                                 </div>
-                                <div className="space-y-2">
-                                    <div className="flex justify-between items-center">
-                                        <div className="flex items-center gap-2">
-                                            <img src={getFlagUrl(m.home)} className="w-4 h-3 rounded-[2px] shadow-sm" />
-                                            <span className={`text-sm ${m.played && m.hGoals > m.aGoals ? 'font-bold text-gray-900' : 'font-medium text-gray-700'}`}>{m.home}</span>
-                                        </div>
-                                        <span className={`text-sm font-bold ${m.played === 'live' ? 'text-red-600' : 'text-gray-900'}`}>
-                                            {m.played ? m.hGoals : '-'}
-                                        </span>
+                                
+                                {/* Detalles del Partido */}
+                                <div className="flex-1 flex justify-between items-center min-w-0 pr-1">
+                                    
+                                    {/* Local */}
+                                    <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-end">
+                                        <span className={`text-xs truncate text-right ${m.played && m.hGoals > m.aGoals ? 'font-bold text-gray-900' : 'font-medium text-gray-600'}`}>{m.home}</span>
+                                        <img src={getFlagUrl(m.home)} className="w-4 h-3 rounded-[1px] opacity-90 shrink-0" />
                                     </div>
-                                    <div className="flex justify-between items-center">
-                                        <div className="flex items-center gap-2">
-                                            <img src={getFlagUrl(m.away)} className="w-4 h-3 rounded-[2px] shadow-sm" />
-                                            <span className={`text-sm ${m.played && m.aGoals > m.hGoals ? 'font-bold text-gray-900' : 'font-medium text-gray-700'}`}>{m.away}</span>
-                                        </div>
-                                        <span className={`text-sm font-bold ${m.played === 'live' ? 'text-red-600' : 'text-gray-900'}`}>
-                                            {m.played ? m.aGoals : '-'}
-                                        </span>
+                                    
+                                    {/* Marcador / VS / LIVE Badge */}
+                                    <div className="w-[60px] flex flex-col items-center justify-center shrink-0">
+                                        {m.played === 'live' && (
+                                            <span className="text-[8px] bg-red-600 text-white px-1.5 py-[2px] rounded animate-pulse mb-0.5 font-black tracking-widest leading-none shadow-sm">LIVE</span>
+                                        )}
+                                        {m.played ? (
+                                            <span className={`text-xs font-black px-2 py-0.5 rounded leading-none ${m.played === 'live' ? 'text-red-700 bg-red-100' : 'text-gray-800 bg-gray-200/60'}`}>
+                                                {m.hGoals} - {m.aGoals}
+                                            </span>
+                                        ) : (
+                                            <span className="text-[10px] font-bold text-gray-300 bg-gray-50 px-1.5 py-0.5 rounded">VS</span>
+                                        )}
                                     </div>
+                                    
+                                    {/* Visitante */}
+                                    <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-start">
+                                        <img src={getFlagUrl(m.away)} className="w-4 h-3 rounded-[1px] opacity-90 shrink-0" />
+                                        <span className={`text-xs truncate ${m.played && m.aGoals > m.hGoals ? 'font-bold text-gray-900' : 'font-medium text-gray-600'}`}>{m.away}</span>
+                                    </div>
+                                    
                                 </div>
                             </div>
                         ))}
@@ -692,7 +703,9 @@
                     </main>
                     
                     <footer className="flex flex-col items-center justify-center p-5 text-xs text-gray-400 border-t bg-gray-50 mt-auto gap-4">
-                        <p className="text-center">Aplicación interactiva diseñada por Kineti (<a href="https://www.kineti.com.co" target="_blank" rel="noopener noreferrer" className="text-teal-600 hover:underline font-medium">kineti.com.co</a>). Los cruces dinámicos se basan en proyecciones del momento.</p>
+                        <p className="text-center">
+                            Aplicación interactiva diseñada por Kineti (<a href="https://www.kineti.com.co" target="_blank" rel="noopener noreferrer" className="text-teal-600 hover:underline font-medium">kineti.com.co</a>). Los cruces dinámicos se basan en proyecciones del momento.
+                        </p>
                         
                         {/* CONTADOR DE VISITAS FUNCIONAL */}
                         <div className="flex flex-col items-center gap-1">
