@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- ETIQUETAS ANTI-CACHÉ (Para forzar a los navegadores a buscar la última versión) -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
     <title>Mundial 2026 - Visualizador</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -26,6 +33,15 @@
         .tab-inactive { color: #6b7280; font-weight: 500; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Animación para el botón de recarga */
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-once {
+            animation: spin-slow 0.5s ease-in-out 1;
+        }
     </style>
 </head>
 <body>
@@ -196,7 +212,6 @@
             return sortedGroups;
         };
 
-        // UX MEJORADO: Lista vertical compacta para los partidos del día (Adiós scroll horizontal)
         const TodayMatchesCarousel = ({ matches, todayLabel }) => {
             if (!matches || matches.length === 0) return null;
             return (
@@ -389,7 +404,6 @@
                 { title: "P87: 1º Grupo K vs 3º D/E/I/J/L", leader: getTeam('K',1), targets: ['D','E','I','J','L'], date: '3 Jul', time: '20:30', venue: 'Kansas City' }
             ];
 
-            // ALGORITMO ANTIDUPLICADOS MEJORADO (Smart Allocation)
             let availableThirds = [...bestThirds];
             let assignedMatches = dynamicMatchesRaw.map(m => ({ ...m, t2: null }));
 
@@ -397,12 +411,10 @@
             while (changed && availableThirds.length > 0) {
                 changed = false;
                 
-                // 1. Contar cuántas opciones válidas tiene cada partido sin asignar
                 const optionsCount = assignedMatches.map(m => 
                     m.t2 ? 999 : availableThirds.filter(t => m.targets.includes(t.group)).length
                 );
                 
-                // 2. Encontrar el partido con la MENOR cantidad de opciones (> 0)
                 let minOptions = 999;
                 let matchIdx = -1;
                 for (let i = 0; i < optionsCount.length; i++) {
@@ -412,11 +424,10 @@
                     }
                 }
 
-                // 3. Asignar el mejor tercero disponible a ese partido
                 if (matchIdx !== -1) {
                     const m = assignedMatches[matchIdx];
                     const validThirds = availableThirds.filter(t => m.targets.includes(t.group));
-                    const selected = validThirds[0]; // El de más puntos
+                    const selected = validThirds[0]; 
                     
                     assignedMatches[matchIdx].t2 = selected;
                     availableThirds = availableThirds.filter(t => t.name !== selected.name);
@@ -424,8 +435,6 @@
                 }
             }
 
-            // 4. FALLBACK DE SEGURIDAD: Si por proyecciones parciales algún partido se quedó sin opción válida,
-            // le forzamos cualquiera de los mejores 3ros que hayan sobrado para evitar un feo "TBD".
             for (let i = 0; i < assignedMatches.length; i++) {
                 if (!assignedMatches[i].t2 && availableThirds.length > 0) {
                     assignedMatches[i].t2 = availableThirds.shift();
@@ -623,14 +632,38 @@
 
         function App() {
             const [activeTab, setActiveTab] = React.useState('grupos');
+            const [isRefreshing, setIsRefreshing] = React.useState(false); // Estado para animar el botón de Refresh
             
+            // Cálculos principales
+            const standings = calculateStandings();
+            
+            // LÓGICA DEL CARRUSEL MEJORADA: Buscar partidos del día cronológicamente
+            const activeMatches = MATCHES.filter(m => m.played === 'live');
+            
+            // WOW FEATURE: Cambiar el título de la pestaña si hay partidos en vivo
+            React.useEffect(() => {
+                if (activeMatches.length > 0) {
+                    document.title = `🔴 [LIVE] Mundial 2026`;
+                } else {
+                    document.title = `Mundial 2026 - Visualizador`;
+                }
+            }, [activeMatches.length]);
+
             // Efecto para hacer scroll al inicio al cambiar de pestaña
             React.useEffect(() => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }, [activeTab]);
 
-            // Cálculos principales
-            const standings = calculateStandings();
+            // Función para DESTRUIR LA CACHÉ
+            const forceRefresh = () => {
+                setIsRefreshing(true);
+                setTimeout(() => {
+                    // Crea una URL con un parámetro aleatorio de tiempo para saltarse la caché sí o sí
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('v', new Date().getTime());
+                    window.location.href = url.toString();
+                }, 400); // Pequeño delay para que se vea la animación
+            };
             
             // Calcular mejores 3ros
             const thirdPlaces = [];
@@ -643,7 +676,7 @@
                 return b.gf - a.gf;
             }).slice(0, 8); // Top 8
 
-            // FIX FECHA DINÁMICA (AHORA SOPORTA JULIO)
+            // FIX FECHA DINÁMICA
             const playedMatches = MATCHES.filter(m => m.played === true || m.played === 'live');
             let latestDateObj = { date: "19 Jun" };
             if (playedMatches.length > 0) {
@@ -658,8 +691,6 @@
             const [dDay, dMonth] = latestDateObj.date.split(' ');
             const latestDate = `${dDay} ${dMonth.startsWith('Jul') ? 'Julio' : 'Junio'}`;
 
-            // LÓGICA DEL CARRUSEL MEJORADA: Buscar partidos del día cronológicamente
-            const activeMatches = MATCHES.filter(m => m.played === 'live');
             let currentDayMatches = [];
             let todayLabel = "";
 
@@ -668,7 +699,6 @@
             } else {
                 const unplayedMatches = MATCHES.filter(m => m.played === false);
                 if (unplayedMatches.length > 0) {
-                    // Ordenamos cronológicamente para encontrar el VERDADERO próximo partido
                     unplayedMatches.sort((a, b) => {
                         const getScore = (dateStr) => {
                             const [d, m] = dateStr.split(' ');
@@ -683,7 +713,6 @@
             }
             
             currentDayMatches = MATCHES.filter(m => m.date === todayLabel);
-            // Ordenar el carrusel por hora
             currentDayMatches.sort((a, b) => a.time.localeCompare(b.time));
 
             return (
@@ -692,12 +721,27 @@
                     <header className="bg-gradient-to-r from-blue-900 to-teal-800 text-white p-6 rounded-b-3xl shadow-lg sticky top-0 z-10">
                         <div className="flex justify-between items-center">
                             <div>
-                                <h1 className="text-3xl font-black tracking-tight">Mundial '26</h1>
+                                <h1 className="text-3xl font-black tracking-tight flex items-center gap-2">
+                                    Mundial '26
+                                </h1>
                                 <p className="text-teal-200 text-sm font-medium">Visualizador Interactivo</p>
                             </div>
-                            <div className="text-right text-xs bg-white/20 px-3 py-1.5 rounded-lg backdrop-blur-sm">
-                                <span className="block font-bold">Datos al</span>
-                                {latestDate}
+                            
+                            {/* NUEVO UI: Contenedor con Fecha y Botón de Recarga Anti-Caché */}
+                            <div className="flex items-center gap-2">
+                                <div className="text-right text-xs bg-white/10 px-3 py-1.5 rounded-lg border border-white/20 backdrop-blur-sm">
+                                    <span className="block font-bold opacity-80">Datos al</span>
+                                    {latestDate}
+                                </div>
+                                <button 
+                                    onClick={forceRefresh}
+                                    title="Buscar últimos goles"
+                                    className="bg-white/10 hover:bg-white/20 border border-white/20 text-white p-2.5 rounded-lg backdrop-blur-sm transition-all active:scale-95 flex items-center justify-center"
+                                >
+                                    <svg className={`w-4 h-4 ${isRefreshing ? 'animate-spin-once' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    </svg>
+                                </button>
                             </div>
                         </div>
 
