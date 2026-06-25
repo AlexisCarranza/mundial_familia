@@ -102,8 +102,11 @@
             { id: 'mE2', group: 'E', home: 'Costa de Marfil', away: 'Ecuador', hGoals: 1, aGoals: 0, played: true, date: '14 Jun', time: '18:00' },
             { id: 'mE3', group: 'E', home: 'Alemania', away: 'Costa de Marfil', hGoals: 2, aGoals: 1, played: true, date: '20 Jun', time: '15:00' },
             { id: 'mE4', group: 'E', home: 'Ecuador', away: 'Curazao', hGoals: 0, aGoals: 0, played: true, date: '20 Jun', time: '19:00' },
-            { id: 'mE5', group: 'E', home: 'Ecuador', away: 'Alemania', hGoals: 1, aGoals: 1, played: 'live', date: '25 Jun', time: '15:00' },
-            { id: 'mE6', group: 'E', home: 'Curazao', away: 'Costa de Marfil', hGoals: 0, aGoals: 1, played: 'live', date: '25 Jun', time: '15:00' },
+            // 🔥 AÑADIDA FEATURE DE ANOTADORES A PARTIDOS EN VIVO 🔥
+            { id: 'mE5', group: 'E', home: 'Ecuador', away: 'Alemania', hGoals: 1, aGoals: 1, played: 'live', date: '25 Jun', time: '15:00', 
+              scorers: { home: ["N. Angulo 9'"], away: ["L. Sané 2'"] } },
+            { id: 'mE6', group: 'E', home: 'Curazao', away: 'Costa de Marfil', hGoals: 0, aGoals: 1, played: 'live', date: '25 Jun', time: '15:00', 
+              scorers: { home: [], away: ["N. Pepé 7'" , "N. Pepé 64'"]  } },
             // Grupo F
             { id: 'mF1', group: 'F', home: 'Países Bajos', away: 'Japón', hGoals: 2, aGoals: 2, played: true, date: '14 Jun', time: '15:00' },
             { id: 'mF2', group: 'F', home: 'Suecia', away: 'Túnez', hGoals: 5, aGoals: 1, played: true, date: '14 Jun', time: '21:00' },
@@ -234,35 +237,63 @@
                                     <span className={`text-[10px] font-bold mt-0.5 ${m.played === 'live' ? 'text-red-600' : 'text-gray-600'}`}>{m.time}</span>
                                 </div>
                                 
-                                {/* Detalles del Partido */}
-                                <div className="flex-1 flex justify-between items-center min-w-0 pr-1">
+                                {/* Contenedor Principal (Equipos + Marcador + Anotadores) */}
+                                <div className="flex-1 flex flex-col min-w-0 pr-1 py-0.5">
                                     
-                                    {/* Local */}
-                                    <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-end">
-                                        <span className={`text-xs truncate text-right ${m.played && m.hGoals > m.aGoals ? 'font-bold text-gray-900' : 'font-medium text-gray-600'}`}>{m.home}</span>
-                                        <img src={getFlagUrl(m.home)} className="w-4 h-3 rounded-[1px] opacity-90 shrink-0" />
+                                    {/* Fila 1: Escudos, Nombres y Marcador */}
+                                    <div className="flex justify-between items-center w-full">
+                                        {/* Local */}
+                                        <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-end">
+                                            <span className={`text-xs truncate text-right ${m.played && m.hGoals > m.aGoals ? 'font-bold text-gray-900' : 'font-medium text-gray-600'}`}>{m.home}</span>
+                                            <img src={getFlagUrl(m.home)} className="w-4 h-3 rounded-[1px] opacity-90 shrink-0" />
+                                        </div>
+                                        
+                                        {/* Marcador / VS / LIVE Badge */}
+                                        <div className="w-[60px] flex flex-col items-center justify-center shrink-0">
+                                            {m.played === 'live' && (
+                                                <span className="text-[8px] bg-red-600 text-white px-1.5 py-[2px] rounded animate-pulse mb-0.5 font-black tracking-widest leading-none shadow-sm">LIVE</span>
+                                            )}
+                                            {m.played ? (
+                                                <span className={`text-xs font-black px-2 py-0.5 rounded leading-none ${m.played === 'live' ? 'text-red-700 bg-red-100' : 'text-gray-800 bg-gray-200/60'}`}>
+                                                    {m.hGoals} - {m.aGoals}
+                                                </span>
+                                            ) : (
+                                                <span className="text-[10px] font-bold text-gray-300 bg-gray-50 px-1.5 py-0.5 rounded">VS</span>
+                                            )}
+                                        </div>
+                                        
+                                        {/* Visitante */}
+                                        <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-start">
+                                            <img src={getFlagUrl(m.away)} className="w-4 h-3 rounded-[1px] opacity-90 shrink-0" />
+                                            <span className={`text-xs truncate ${m.played && m.aGoals > m.hGoals ? 'font-bold text-gray-900' : 'font-medium text-gray-600'}`}>{m.away}</span>
+                                        </div>
                                     </div>
-                                    
-                                    {/* Marcador / VS / LIVE Badge */}
-                                    <div className="w-[60px] flex flex-col items-center justify-center shrink-0">
-                                        {m.played === 'live' && (
-                                            <span className="text-[8px] bg-red-600 text-white px-1.5 py-[2px] rounded animate-pulse mb-0.5 font-black tracking-widest leading-none shadow-sm">LIVE</span>
-                                        )}
-                                        {m.played ? (
-                                            <span className={`text-xs font-black px-2 py-0.5 rounded leading-none ${m.played === 'live' ? 'text-red-700 bg-red-100' : 'text-gray-800 bg-gray-200/60'}`}>
-                                                {m.hGoals} - {m.aGoals}
-                                            </span>
-                                        ) : (
-                                            <span className="text-[10px] font-bold text-gray-300 bg-gray-50 px-1.5 py-0.5 rounded">VS</span>
-                                        )}
-                                    </div>
-                                    
-                                    {/* Visitante */}
-                                    <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-start">
-                                        <img src={getFlagUrl(m.away)} className="w-4 h-3 rounded-[1px] opacity-90 shrink-0" />
-                                        <span className={`text-xs truncate ${m.played && m.aGoals > m.hGoals ? 'font-bold text-gray-900' : 'font-medium text-gray-600'}`}>{m.away}</span>
-                                    </div>
-                                    
+
+                                    {/* 🔥 Fila 2: Anotadores del Partido 🔥 */}
+                                    {m.scorers && (m.scorers.home.length > 0 || m.scorers.away.length > 0) && (
+                                        <div className="flex justify-between items-start mt-1.5 pt-1 border-t border-gray-200/60 w-full">
+                                            {/* Goles Local */}
+                                            <div className="flex-1 flex flex-col items-end pr-1 min-w-0">
+                                                {m.scorers.home.map((s, idx) => (
+                                                    <span key={`h-${idx}`} className={`text-[9px] font-medium truncate flex items-center gap-1 mb-0.5 ${m.played === 'live' ? 'text-red-900/80' : 'text-gray-500'}`}>
+                                                        {s} <span className="text-[7px]">⚽</span>
+                                                    </span>
+                                                ))}
+                                            </div>
+                                            
+                                            {/* Espaciador central */}
+                                            <div className="w-[60px] shrink-0"></div>
+                                            
+                                            {/* Goles Visitante */}
+                                            <div className="flex-1 flex flex-col items-start pl-1 min-w-0">
+                                                {m.scorers.away.map((s, idx) => (
+                                                    <span key={`a-${idx}`} className={`text-[9px] font-medium truncate flex items-center gap-1 mb-0.5 ${m.played === 'live' ? 'text-red-900/80' : 'text-gray-500'}`}>
+                                                        <span className="text-[7px]">⚽</span> {s}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         ))}
