@@ -42,6 +42,15 @@
         .animate-spin-once {
             animation: spin-slow 0.5s ease-in-out 1;
         }
+
+        /* 🇨🇴 Text Gradient para Colombia */
+        .colombia-text {
+            background: linear-gradient(to right, #d97706 30%, #1d4ed8 60%, #dc2626 90%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 900 !important;
+        }
     </style>
 </head>
 <body>
@@ -173,6 +182,52 @@
               scorers: { home: [], away: [] } } 
         ];
 
+        const KNOCKOUT_MATCHES = [
+            // --- 16VOS DE FINAL (Los equipos se calculan dinámicamente) ---
+            { id: 'm73', round: '16vos', date: '28 Jun', time: '14:00', venue: 'Los Ángeles', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm74', round: '16vos', date: '29 Jun', time: '15:30', venue: 'Boston', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm75', round: '16vos', date: '29 Jun', time: '20:00', venue: 'Monterrey', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm76', round: '16vos', date: '29 Jun', time: '12:00', venue: 'Houston', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm77', round: '16vos', date: '30 Jun', time: '16:00', venue: 'Nueva York/NJ', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm78', round: '16vos', date: '30 Jun', time: '12:00', venue: 'Dallas', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm79', round: '16vos', date: '30 Jun', time: '20:00', venue: 'CDMX', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm80', round: '16vos', date: '1 Jul', time: '11:00', venue: 'Atlanta', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm81', round: '16vos', date: '1 Jul', time: '19:00', venue: 'San Francisco', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm82', round: '16vos', date: '1 Jul', time: '15:00', venue: 'Seattle', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm83', round: '16vos', date: '2 Jul', time: '18:00', venue: 'Toronto', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm84', round: '16vos', date: '2 Jul', time: '14:00', venue: 'Los Ángeles', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm85', round: '16vos', date: '2 Jul', time: '22:00', venue: 'Vancouver', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm86', round: '16vos', date: '3 Jul', time: '17:00', venue: 'Miami', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm87', round: '16vos', date: '3 Jul', time: '20:30', venue: 'Kansas City', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm88', round: '16vos', date: '3 Jul', time: '13:00', venue: 'Dallas', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+
+            // --- OCTAVOS DE FINAL (Dependencias arregladas basadas en cuadro oficial) ---
+            { id: 'm89', round: 'octavos', homeRef: 'm73', awayRef: 'm75', date: '4 Jul', time: '12:00', venue: 'Houston', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm90', round: 'octavos', homeRef: 'm74', awayRef: 'm77', date: '4 Jul', time: '16:00', venue: 'Filadelfia', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm91', round: 'octavos', homeRef: 'm76', awayRef: 'm78', date: '5 Jul', time: '15:00', venue: 'Nueva York/NJ', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm92', round: 'octavos', homeRef: 'm79', awayRef: 'm80', date: '5 Jul', time: '19:00', venue: 'CDMX', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm93', round: 'octavos', homeRef: 'm83', awayRef: 'm84', date: '6 Jul', time: '14:00', venue: 'Dallas', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm94', round: 'octavos', homeRef: 'm81', awayRef: 'm82', date: '6 Jul', time: '19:00', venue: 'Seattle', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm95', round: 'octavos', homeRef: 'm86', awayRef: 'm88', date: '7 Jul', time: '11:00', venue: 'Atlanta', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm96', round: 'octavos', homeRef: 'm85', awayRef: 'm87', date: '7 Jul', time: '15:00', venue: 'Vancouver', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+
+            // --- CUARTOS DE FINAL ---
+            { id: 'm97', round: 'cuartos', homeRef: 'm89', awayRef: 'm90', date: '9 Jul', time: '15:00', venue: 'Boston', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm98', round: 'cuartos', homeRef: 'm93', awayRef: 'm94', date: '10 Jul', time: '14:00', venue: 'Los Ángeles', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm99', round: 'cuartos', homeRef: 'm91', awayRef: 'm92', date: '11 Jul', time: '16:00', venue: 'Miami', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm100', round: 'cuartos', homeRef: 'm95', awayRef: 'm96', date: '11 Jul', time: '20:00', venue: 'Kansas City', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+
+            // --- SEMIFINALES ---
+            { id: 'm101', round: 'semis', homeRef: 'm97', awayRef: 'm98', date: '14 Jul', time: '14:00', venue: 'Dallas', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+            { id: 'm102', round: 'semis', homeRef: 'm99', awayRef: 'm100', date: '15 Jul', time: '14:00', venue: 'Atlanta', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+
+            // --- TERCER PUESTO ---
+            { id: 'm103', round: 'tercer', homeRef: 'm101', awayRef: 'm102', isLoserBracket: true, date: '18 Jul', time: '16:00', venue: 'Miami', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
+
+            // --- FINAL ---
+            { id: 'm104', round: 'final', homeRef: 'm101', awayRef: 'm102', date: '19 Jul', time: '14:00', venue: 'Nueva York/NJ', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } }
+        ];
+
         const GOLEADORES = [
             { name: "L. Messi", team: "Argentina", played: 2, count: 5 },
             { name: "K. Mbappe", team: "Francia", played: 2, count: 4 },
@@ -192,12 +247,9 @@
         const calculateStandings = () => {
             const groups = {};
             const groupNames = ['A','B','C','D','E','F','G','H','I','J','K','L'];
-            
-            // Inicializar grupos vacíos
             groupNames.forEach(g => groups[g] = {});
 
             MATCHES.forEach(m => {
-                // Registrar equipos incluso si no han jugado
                 [m.home, m.away].forEach(team => { 
                     if (!groups[m.group][team]) {
                         groups[m.group][team] = { name: team, pts: 0, pj: 0, gf: 0, ga: 0, gd: 0, group: m.group }; 
@@ -218,7 +270,6 @@
                 }
             });
 
-            // Convertir a arrays y ordenar
             const sortedGroups = {};
             for (const [gName, teamsObj] of Object.entries(groups)) {
                 sortedGroups[gName] = Object.values(teamsObj).sort((a, b) => {
@@ -228,6 +279,220 @@
                 });
             }
             return sortedGroups;
+        };
+
+        // 🔥 ALGORITMO OFICIAL DE LA FIFA PARA 16VOS 🔥
+        const resolveSixteenMatches = (standings, bestThirds) => {
+            const getTeam = (g, p) => standings[g] && standings[g][p-1] ? standings[g][p-1].name : `TBD (Grp ${g})`;
+            
+            const matchups = {
+                m73: { home: getTeam('A',2), away: getTeam('B',2) },
+                m75: { home: getTeam('F',1), away: getTeam('C',2) },
+                m76: { home: getTeam('C',1), away: getTeam('F',2) },
+                m78: { home: getTeam('E',2), away: getTeam('I',2) },
+                m83: { home: getTeam('K',2), away: getTeam('L',2) },
+                m84: { home: getTeam('H',1), away: getTeam('J',2) },
+                m86: { home: getTeam('J',1), away: getTeam('H',2) },
+                m88: { home: getTeam('D',2), away: getTeam('G',2) }
+            };
+
+            const dynamicTargets = {
+                m74: { home: getTeam('E',1), targets: ['A','B','C','D','F'] },
+                m77: { home: getTeam('I',1), targets: ['C','D','F','G','H'] },
+                m79: { home: getTeam('A',1), targets: ['C','E','F','H','I'] },
+                m80: { home: getTeam('L',1), targets: ['E','H','I','J','K'] },
+                m81: { home: getTeam('D',1), targets: ['B','E','F','I','J'] },
+                m82: { home: getTeam('G',1), targets: ['A','E','H','I','J'] },
+                m85: { home: getTeam('B',1), targets: ['E','F','G','I','J'] },
+                m87: { home: getTeam('K',1), targets: ['D','E','I','J','L'] }
+            };
+
+            let availableThirds = [...bestThirds];
+            let assignedThirds = {};
+
+            // Búsqueda Greedy para asignar los mejores terceros según las reglas de cruce
+            let changed = true;
+            while (changed && availableThirds.length > 0) {
+                changed = false;
+                let minOptions = 999;
+                let matchIdToFill = null;
+
+                for (const mId in dynamicTargets) {
+                    if (!assignedThirds[mId]) {
+                        const validOptions = availableThirds.filter(t => dynamicTargets[mId].targets.includes(t.group));
+                        if (validOptions.length > 0 && validOptions.length < minOptions) {
+                            minOptions = validOptions.length;
+                            matchIdToFill = mId;
+                        }
+                    }
+                }
+
+                if (matchIdToFill) {
+                    const validOptions = availableThirds.filter(t => dynamicTargets[matchIdToFill].targets.includes(t.group));
+                    const selected = validOptions[0];
+                    assignedThirds[matchIdToFill] = selected.name;
+                    availableThirds = availableThirds.filter(t => t.name !== selected.name);
+                    changed = true;
+                }
+            }
+
+            // Llenar vacíos si la fase de grupos no ha terminado
+            for (const mId in dynamicTargets) {
+                if (!assignedThirds[mId]) {
+                    assignedThirds[mId] = availableThirds.length > 0 ? availableThirds.shift().name : `TBD (3º ${dynamicTargets[mId].targets.join('/')})`;
+                }
+                matchups[mId] = { home: dynamicTargets[mId].home, away: assignedThirds[mId] };
+            }
+
+            return matchups;
+        };
+
+        const resolveKnockoutTeams = (matches, sixteenMatchups) => {
+            const getWinner = (match, getLoser = false) => {
+                if (!match.played || match.played === 'live') return getLoser ? `Perdedor ${match.id.replace('m', 'P')}` : `Ganador ${match.id.replace('m', 'P')}`;
+                if (match.hGoals > match.aGoals) return getLoser ? match.away : match.home;
+                if (match.aGoals > match.hGoals) return getLoser ? match.home : match.away;
+                if (match.hPens !== undefined && match.aPens !== undefined) {
+                    if (match.hPens > match.aPens) return getLoser ? match.away : match.home;
+                    if (match.aPens > match.hPens) return getLoser ? match.home : match.away;
+                }
+                return getLoser ? `Perdedor ${match.id.replace('m', 'P')}` : `Ganador ${match.id.replace('m', 'P')}`;
+            };
+
+            const resolvedMatches = {};
+            matches.forEach(m => {
+                let homeTeam = 'TBD';
+                let awayTeam = 'TBD';
+
+                // Si es 16vos, los equipos vienen del cálculo directo de la fase de grupos
+                if (m.round === '16vos') {
+                    homeTeam = sixteenMatchups[m.id]?.home || 'TBD';
+                    awayTeam = sixteenMatchups[m.id]?.away || 'TBD';
+                } else {
+                    // Si es una ronda superior, dependen de los ganadores anteriores
+                    if (m.homeRef) {
+                        const refMatch = resolvedMatches[m.homeRef];
+                        homeTeam = refMatch ? getWinner(refMatch, m.isLoserBracket) : `TBD`;
+                    }
+                    if (m.awayRef) {
+                        const refMatch = resolvedMatches[m.awayRef];
+                        awayTeam = refMatch ? getWinner(refMatch, m.isLoserBracket) : `TBD`;
+                    }
+                }
+
+                resolvedMatches[m.id] = { ...m, home: homeTeam, away: awayTeam };
+            });
+            return Object.values(resolvedMatches);
+        };
+
+        const MatchCard = ({ match: m }) => {
+            // Lógica de grises para equipos no definidos (TBD)
+            const isTBD = (name) => !name || name.includes('TBD') || name.includes('Ganador') || name.includes('Perdedor');
+            
+            // 🇨🇴 Lógica del Easter Egg de Colombia
+            const isColombia = (name) => name === 'Colombia';
+            const hasColombia = isColombia(m.home) || isColombia(m.away);
+            const isLive = m.played === 'live';
+            const isColombiaLive = hasColombia && isLive;
+            
+            let cardStyle = "card p-2 border-l-4 flex flex-col transition-all duration-300 mb-2 ";
+            if (isColombiaLive) {
+                cardStyle += "border-yellow-400 bg-gradient-to-br from-yellow-50 via-blue-50 to-red-50 ring-2 ring-yellow-400 shadow-lg";
+            } else if (hasColombia) {
+                cardStyle += "border-yellow-300 bg-gradient-to-br from-yellow-50/20 via-blue-50/10 to-red-50/10";
+            } else if (isLive) {
+                cardStyle += "border-red-500 bg-red-50/60 ring-1 ring-red-100 shadow-sm";
+            } else if (m.played) {
+                cardStyle += "border-gray-300 bg-gray-50/50";
+            } else {
+                cardStyle += "border-blue-500 bg-white";
+            }
+
+            return (
+                <div className={cardStyle}>
+                    {m.round && (
+                        <div className="flex justify-between items-center mb-1.5 pb-1 border-b border-gray-100 w-full px-1">
+                            <span className="text-[9px] font-black text-gray-400 uppercase tracking-wide flex items-center gap-1">
+                                {m.id.replace('m', 'Partido ')}
+                            </span>
+                            <div className="flex gap-2 text-[9px] text-gray-500 font-medium">
+                                <span>🗓️ {m.date}</span>
+                                <span>📍 {m.venue}</span>
+                            </div>
+                        </div>
+                    )}
+                    
+                    <div className="flex justify-between items-center w-full">
+                        <div className="flex flex-col items-center justify-center w-[48px] shrink-0 border-r border-gray-100/80 pr-2 mr-2 py-1">
+                            <span className="text-[9px] font-black text-gray-400 tracking-wider">
+                                {m.group ? `GRP ${m.group}` : m.round.substring(0,3).toUpperCase()}
+                            </span>
+                            <span className={`text-[10px] font-bold mt-0.5 ${isLive ? 'text-red-600' : 'text-gray-600'}`}>{m.time}</span>
+                        </div>
+                        
+                        <div className="flex-1 flex flex-col min-w-0 pr-1 py-0.5">
+                            <div className="flex justify-between items-center w-full">
+                                {/* Local */}
+                                <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-end">
+                                    <span className={`text-xs truncate text-right ${isTBD(m.home) ? 'text-gray-400' : isColombia(m.home) ? 'colombia-text' : (m.played && m.hGoals > m.aGoals ? 'font-bold text-gray-900' : 'font-medium text-gray-600')}`}>
+                                        {m.home}
+                                    </span>
+                                    {!isTBD(m.home) && (
+                                        <img src={getFlagUrl(m.home)} className="w-4 h-3 rounded-[1px] opacity-90 shrink-0" />
+                                    )}
+                                </div>
+                                
+                                {/* Marcador */}
+                                <div className="w-[60px] flex flex-col items-center justify-center shrink-0">
+                                    {isLive && (
+                                        <span className="text-[8px] bg-red-600 text-white px-1.5 py-[2px] rounded animate-pulse mb-0.5 font-black tracking-widest leading-none shadow-sm">LIVE</span>
+                                    )}
+                                    {m.played ? (
+                                        <span className={`text-xs font-black px-2 py-0.5 rounded flex items-center leading-none ${isLive ? 'text-red-700 bg-red-100' : 'text-gray-800 bg-gray-200/60'}`}>
+                                            {m.hPens !== undefined && <span className="text-[9px] text-gray-500 mr-1">({m.hPens})</span>}
+                                            {m.hGoals} - {m.aGoals}
+                                            {m.aPens !== undefined && <span className="text-[9px] text-gray-500 ml-1">({m.aPens})</span>}
+                                        </span>
+                                    ) : (
+                                        <span className="text-[10px] font-bold text-gray-300 bg-gray-50 px-1.5 py-0.5 rounded">VS</span>
+                                    )}
+                                </div>
+                                
+                                {/* Visitante */}
+                                <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-start">
+                                    {!isTBD(m.away) && (
+                                        <img src={getFlagUrl(m.away)} className="w-4 h-3 rounded-[1px] opacity-90 shrink-0" />
+                                    )}
+                                    <span className={`text-xs truncate ${isTBD(m.away) ? 'text-gray-400' : isColombia(m.away) ? 'colombia-text' : (m.played && m.aGoals > m.hGoals ? 'font-bold text-gray-900' : 'font-medium text-gray-600')}`}>
+                                        {m.away}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Anotadores */}
+                            {m.scorers && (m.scorers.home.length > 0 || m.scorers.away.length > 0) && (
+                                <div className="flex justify-between items-start mt-1.5 pt-1 border-t border-gray-200/60 w-full">
+                                    <div className="flex-1 flex flex-col items-end pr-1 min-w-0">
+                                        {m.scorers.home.map((s, idx) => (
+                                            <span key={`h-${idx}`} className={`text-[9px] font-medium truncate flex items-center gap-1 mb-0.5 ${isLive ? 'text-red-900/80' : 'text-gray-500'}`}>
+                                                {s} <span className="text-[7px]">⚽</span>
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <div className="w-[60px] shrink-0"></div>
+                                    <div className="flex-1 flex flex-col items-start pl-1 min-w-0">
+                                        {m.scorers.away.map((s, idx) => (
+                                            <span key={`a-${idx}`} className={`text-[9px] font-medium truncate flex items-center gap-1 mb-0.5 ${isLive ? 'text-red-900/80' : 'text-gray-500'}`}>
+                                                <span className="text-[7px]">⚽</span> {s}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
         };
 
         const TodayMatchesCarousel = ({ matches, todayLabel }) => {
@@ -242,76 +507,8 @@
                         <span className="text-xs text-gray-500 font-medium px-2 py-0.5 bg-gray-100 rounded">{todayLabel}</span>
                     </div>
                     
-                    <div className="flex flex-col gap-2">
-                        {matches.map(m => (
-                            <div key={m.id} className={`card p-2 border-l-4 flex justify-between items-center transition-all ${m.played === 'live' ? 'border-red-500 bg-red-50/60 ring-1 ring-red-100 shadow-sm' : m.played ? 'border-gray-300 bg-gray-50/50' : 'border-blue-500 bg-white'}`}>
-                                
-                                {/* Info Grupo y Hora */}
-                                <div className="flex flex-col items-center justify-center w-[48px] shrink-0 border-r border-gray-100/80 pr-2 mr-2 py-1">
-                                    <span className="text-[9px] font-black text-gray-400 tracking-wider">GRP {m.group}</span>
-                                    <span className={`text-[10px] font-bold mt-0.5 ${m.played === 'live' ? 'text-red-600' : 'text-gray-600'}`}>{m.time}</span>
-                                </div>
-                                
-                                {/* Contenedor Principal (Equipos + Marcador + Anotadores) */}
-                                <div className="flex-1 flex flex-col min-w-0 pr-1 py-0.5">
-                                    
-                                    {/* Fila 1: Escudos, Nombres y Marcador */}
-                                    <div className="flex justify-between items-center w-full">
-                                        {/* Local */}
-                                        <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-end">
-                                            <span className={`text-xs truncate text-right ${m.played && m.hGoals > m.aGoals ? 'font-bold text-gray-900' : 'font-medium text-gray-600'}`}>{m.home}</span>
-                                            <img src={getFlagUrl(m.home)} className="w-4 h-3 rounded-[1px] opacity-90 shrink-0" />
-                                        </div>
-                                        
-                                        {/* Marcador / VS / LIVE Badge */}
-                                        <div className="w-[60px] flex flex-col items-center justify-center shrink-0">
-                                            {m.played === 'live' && (
-                                                <span className="text-[8px] bg-red-600 text-white px-1.5 py-[2px] rounded animate-pulse mb-0.5 font-black tracking-widest leading-none shadow-sm">LIVE</span>
-                                            )}
-                                            {m.played ? (
-                                                <span className={`text-xs font-black px-2 py-0.5 rounded leading-none ${m.played === 'live' ? 'text-red-700 bg-red-100' : 'text-gray-800 bg-gray-200/60'}`}>
-                                                    {m.hGoals} - {m.aGoals}
-                                                </span>
-                                            ) : (
-                                                <span className="text-[10px] font-bold text-gray-300 bg-gray-50 px-1.5 py-0.5 rounded">VS</span>
-                                            )}
-                                        </div>
-                                        
-                                        {/* Visitante */}
-                                        <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-start">
-                                            <img src={getFlagUrl(m.away)} className="w-4 h-3 rounded-[1px] opacity-90 shrink-0" />
-                                            <span className={`text-xs truncate ${m.played && m.aGoals > m.hGoals ? 'font-bold text-gray-900' : 'font-medium text-gray-600'}`}>{m.away}</span>
-                                        </div>
-                                    </div>
-
-                                    {/* 🔥 Fila 2: Anotadores del Partido 🔥 */}
-                                    {m.scorers && (m.scorers.home.length > 0 || m.scorers.away.length > 0) && (
-                                        <div className="flex justify-between items-start mt-1.5 pt-1 border-t border-gray-200/60 w-full">
-                                            {/* Goles Local */}
-                                            <div className="flex-1 flex flex-col items-end pr-1 min-w-0">
-                                                {m.scorers.home.map((s, idx) => (
-                                                    <span key={`h-${idx}`} className={`text-[9px] font-medium truncate flex items-center gap-1 mb-0.5 ${m.played === 'live' ? 'text-red-900/80' : 'text-gray-500'}`}>
-                                                        {s} <span className="text-[7px]">⚽</span>
-                                                    </span>
-                                                ))}
-                                            </div>
-                                            
-                                            {/* Espaciador central */}
-                                            <div className="w-[60px] shrink-0"></div>
-                                            
-                                            {/* Goles Visitante */}
-                                            <div className="flex-1 flex flex-col items-start pl-1 min-w-0">
-                                                {m.scorers.away.map((s, idx) => (
-                                                    <span key={`a-${idx}`} className={`text-[9px] font-medium truncate flex items-center gap-1 mb-0.5 ${m.played === 'live' ? 'text-red-900/80' : 'text-gray-500'}`}>
-                                                        <span className="text-[7px]">⚽</span> {s}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        ))}
+                    <div className="flex flex-col">
+                        {matches.map(m => <MatchCard key={m.id} match={m} />)}
                     </div>
                 </div>
             );
@@ -362,8 +559,8 @@
                                                         <span className={`w-5 h-5 flex items-center justify-center text-[10px] rounded-full ${badgeClass}`}>
                                                             {badgeText}
                                                         </span>
-                                                        <img src={getFlagUrl(team.name)} alt={team.name} className="flag shadow-sm" />
-                                                        <span className={idx < 2 || (idx===2 && isBestThird(team.name)) ? "font-semibold text-gray-900" : "text-gray-600"}>
+                                                        <img src={getFlagUrl(team.name)} alt={team.name} className="flag shadow-sm w-4 h-3" />
+                                                        <span className={`${idx < 2 || (idx===2 && isBestThird(team.name)) ? "font-semibold text-gray-900" : "text-gray-600"} ${team.name === 'Colombia' ? 'colombia-text' : ''}`}>
                                                             {team.name}
                                                         </span>
                                                     </td>
@@ -377,45 +574,54 @@
                                 </table>
                             </div>
                             
-                            {/* Sección de Partidos del Grupo */}
                             <div className="mt-4 pt-3 border-t border-gray-100">
                                 <div className="flex justify-between items-center mb-2">
                                     <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wide">Partidos del Grupo</h3>
                                     <span className="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded font-medium">Hora COL</span>
                                 </div>
                                 <div className="space-y-1.5">
-                                    {MATCHES.filter(m => m.group === groupName).map(m => (
-                                        <div key={m.id} className={`flex justify-between items-center text-[11px] p-2 rounded transition-colors ${m.played === 'live' ? 'bg-red-50/60 border border-red-200' : m.played ? 'bg-gray-50' : 'bg-white border border-gray-100'}`}>
-                                            <div className="flex gap-1.5 text-gray-500 w-20 shrink-0">
-                                                <span>{m.date}</span> 
-                                                <span className={`${m.played === 'live' ? 'font-black text-red-600' : 'font-bold text-blue-900'}`}>{m.time}</span>
-                                            </div>
-                                            <div className="flex-1 flex justify-between items-center px-2 min-w-0">
-                                                <div className={`flex items-center gap-1.5 flex-1 min-w-0 ${m.played && m.hGoals > m.aGoals ? 'font-bold text-gray-900' : 'text-gray-600'}`}>
-                                                    <img src={getFlagUrl(m.home)} className="w-3.5 h-2.5 rounded-[1px] opacity-80 shrink-0" />
-                                                    <span className="truncate">{m.home}</span>
-                                                </div>
-                                                
-                                                <div className="px-2 font-bold text-[12px] shrink-0 text-center flex flex-col items-center justify-center">
-                                                    {m.played === 'live' && (
-                                                        <span className="text-[8px] bg-red-600 text-white px-1.5 py-[2px] rounded animate-pulse mb-0.5 font-black tracking-widest leading-none shadow-sm">LIVE</span>
-                                                    )}
-                                                    {m.played ? (
-                                                        <span className={`${m.played === 'live' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'} px-1.5 py-0.5 rounded whitespace-nowrap inline-block leading-none`}>
-                                                            {m.hGoals} - {m.aGoals}
-                                                        </span>
-                                                    ) : (
-                                                        <span className="text-gray-300 whitespace-nowrap inline-block leading-none mt-1">vs</span>
-                                                    )}
-                                                </div>
+                                    {MATCHES.filter(m => m.group === groupName).map(m => {
+                                        const isColombia = m.home === 'Colombia' || m.away === 'Colombia';
+                                        let bgClass = "bg-white border border-gray-100";
+                                        if (m.played === 'live') {
+                                            bgClass = isColombia ? "bg-gradient-to-br from-yellow-50 via-blue-50 to-red-50 border border-yellow-400 shadow-md ring-1 ring-yellow-400" : "bg-red-50/60 border border-red-200";
+                                        } else if (m.played) {
+                                            bgClass = isColombia ? "bg-gradient-to-br from-yellow-50/20 via-blue-50/10 to-red-50/10 border border-yellow-200" : "bg-gray-50";
+                                        }
 
-                                                <div className={`flex items-center gap-1.5 flex-1 justify-end min-w-0 ${m.played && m.aGoals > m.hGoals ? 'font-bold text-gray-900' : 'text-gray-600'}`}>
-                                                    <span className="truncate text-right">{m.away}</span>
-                                                    <img src={getFlagUrl(m.away)} className="w-3.5 h-2.5 rounded-[1px] opacity-80 shrink-0" />
+                                        return (
+                                            <div key={m.id} className={`flex justify-between items-center text-[11px] p-2 rounded transition-colors ${bgClass}`}>
+                                                <div className="flex gap-1.5 text-gray-500 w-20 shrink-0">
+                                                    <span>{m.date}</span> 
+                                                    <span className={`${m.played === 'live' ? 'font-black text-red-600' : 'font-bold text-blue-900'}`}>{m.time}</span>
+                                                </div>
+                                                <div className="flex-1 flex justify-between items-center px-2 min-w-0">
+                                                    <div className={`flex items-center gap-1.5 flex-1 min-w-0 ${m.played && m.hGoals > m.aGoals ? 'font-bold text-gray-900' : 'text-gray-600'}`}>
+                                                        <img src={getFlagUrl(m.home)} className="w-3.5 h-2.5 rounded-[1px] opacity-80 shrink-0" />
+                                                        <span className={`truncate ${m.home === 'Colombia' ? 'colombia-text' : ''}`}>{m.home}</span>
+                                                    </div>
+                                                    
+                                                    <div className="px-2 font-bold text-[12px] shrink-0 text-center flex flex-col items-center justify-center">
+                                                        {m.played === 'live' && (
+                                                            <span className="text-[8px] bg-red-600 text-white px-1.5 py-[2px] rounded animate-pulse mb-0.5 font-black tracking-widest leading-none shadow-sm">LIVE</span>
+                                                        )}
+                                                        {m.played ? (
+                                                            <span className={`${m.played === 'live' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'} px-1.5 py-0.5 rounded whitespace-nowrap inline-block leading-none`}>
+                                                                {m.hGoals} - {m.aGoals}
+                                                            </span>
+                                                        ) : (
+                                                            <span className="text-gray-300 whitespace-nowrap inline-block leading-none mt-1">vs</span>
+                                                        )}
+                                                    </div>
+
+                                                    <div className={`flex items-center gap-1.5 flex-1 justify-end min-w-0 ${m.played && m.aGoals > m.hGoals ? 'font-bold text-gray-900' : 'text-gray-600'}`}>
+                                                        <span className={`truncate text-right ${m.away === 'Colombia' ? 'colombia-text' : ''}`}>{m.away}</span>
+                                                        <img src={getFlagUrl(m.away)} className="w-3.5 h-2.5 rounded-[1px] opacity-80 shrink-0" />
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        )
+                                    })}
                                 </div>
                             </div>
                         </div>
@@ -424,200 +630,45 @@
             );
         };
 
-        const KnockoutView = ({ standings, bestThirds }) => {
-            const getTeam = (group, pos) => standings[group] && standings[group][pos-1] ? standings[group][pos-1] : { name: `TBD (Grp ${group})` };
-            
-            // Reglas FIFA OFICIALES
-            const fixedMatches = [
-                { title: "P73: 2º Grupo A vs 2º Grupo B", t1: getTeam('A',2), t2: getTeam('B',2), date: '28 Jun', time: '14:00', venue: 'Los Ángeles' },
-                { title: "P75: 1º Grupo F vs 2º Grupo C", t1: getTeam('F',1), t2: getTeam('C',2), date: '29 Jun', time: '20:00', venue: 'Monterrey' },
-                { title: "P76: 1º Grupo C vs 2º Grupo F", t1: getTeam('C',1), t2: getTeam('F',2), date: '29 Jun', time: '12:00', venue: 'Houston' },
-                { title: "P78: 2º Grupo E vs 2º Grupo I", t1: getTeam('E',2), t2: getTeam('I',2), date: '30 Jun', time: '12:00', venue: 'Dallas' },
-                { title: "P83: 2º Grupo K vs 2º Grupo L", t1: getTeam('K',2), t2: getTeam('L',2), date: '2 Jul', time: '18:00', venue: 'Toronto' },
-                { title: "P84: 1º Grupo H vs 2º Grupo J", t1: getTeam('H',1), t2: getTeam('J',2), date: '2 Jul', time: '14:00', venue: 'Los Ángeles' },
-                { title: "P86: 1º Grupo J vs 2º Grupo H", t1: getTeam('J',1), t2: getTeam('H',2), date: '3 Jul', time: '17:00', venue: 'Miami' },
-                { title: "P88: 2º Grupo D vs 2º Grupo G", t1: getTeam('D',2), t2: getTeam('G',2), date: '3 Jul', time: '13:00', venue: 'Dallas' }
+        const KnockoutView = ({ resolvedMatches }) => {
+            const [activePhase, setActivePhase] = React.useState('16vos');
+            const phases = [
+                { id: '16vos', label: '16vos' },
+                { id: 'octavos', label: 'Octavos' },
+                { id: 'cuartos', label: 'Cuartos' },
+                { id: 'semis', label: 'Semis' },
+                { id: 'final', label: 'Final' }
             ];
 
-            const dynamicMatchesRaw = [
-                { title: "P74: 1º Grupo E vs 3º A/B/C/D/F", leader: getTeam('E',1), targets: ['A','B','C','D','F'], date: '29 Jun', time: '15:30', venue: 'Boston' },
-                { title: "P77: 1º Grupo I vs 3º C/D/F/G/H", leader: getTeam('I',1), targets: ['C','D','F','G','H'], date: '30 Jun', time: '16:00', venue: 'Nueva York/NJ' },
-                { title: "P79: 1º Grupo A vs 3º C/E/F/H/I", leader: getTeam('A',1), targets: ['C','E','F','H','I'], date: '30 Jun', time: '20:00', venue: 'CDMX' },
-                { title: "P80: 1º Grupo L vs 3º E/H/I/J/K", leader: getTeam('L',1), targets: ['E','H','I','J','K'], date: '1 Jul', time: '11:00', venue: 'Atlanta' },
-                { title: "P81: 1º Grupo D vs 3º B/E/F/I/J", leader: getTeam('D',1), targets: ['B','E','F','I','J'], date: '1 Jul', time: '19:00', venue: 'San Francisco' },
-                { title: "P82: 1º Grupo G vs 3º A/E/H/I/J", leader: getTeam('G',1), targets: ['A','E','H','I','J'], date: '1 Jul', time: '15:00', venue: 'Seattle' },
-                { title: "P85: 1º Grupo B vs 3º E/F/G/I/J", leader: getTeam('B',1), targets: ['E','F','G','I','J'], date: '2 Jul', time: '22:00', venue: 'Vancouver' },
-                { title: "P87: 1º Grupo K vs 3º D/E/I/J/L", leader: getTeam('K',1), targets: ['D','E','I','J','L'], date: '3 Jul', time: '20:30', venue: 'Kansas City' }
-            ];
-
-            let availableThirds = [...bestThirds];
-            let assignedMatches = dynamicMatchesRaw.map(m => ({ ...m, t2: null }));
-
-            let changed = true;
-            while (changed && availableThirds.length > 0) {
-                changed = false;
-                
-                const optionsCount = assignedMatches.map(m => 
-                    m.t2 ? 999 : availableThirds.filter(t => m.targets.includes(t.group)).length
-                );
-                
-                let minOptions = 999;
-                let matchIdx = -1;
-                for (let i = 0; i < optionsCount.length; i++) {
-                    if (optionsCount[i] > 0 && optionsCount[i] < minOptions) {
-                        minOptions = optionsCount[i];
-                        matchIdx = i;
-                    }
-                }
-
-                if (matchIdx !== -1) {
-                    const m = assignedMatches[matchIdx];
-                    const validThirds = availableThirds.filter(t => m.targets.includes(t.group));
-                    const selected = validThirds[0]; 
-                    
-                    assignedMatches[matchIdx].t2 = selected;
-                    availableThirds = availableThirds.filter(t => t.name !== selected.name);
-                    changed = true;
-                }
-            }
-
-            for (let i = 0; i < assignedMatches.length; i++) {
-                if (!assignedMatches[i].t2 && availableThirds.length > 0) {
-                    assignedMatches[i].t2 = availableThirds.shift();
-                } else if (!assignedMatches[i].t2) {
-                    assignedMatches[i].t2 = { name: `TBD (3º ${assignedMatches[i].targets.join('/')})`, isTBD: true };
-                }
-            }
-
-            const dynamicMatches = assignedMatches.map(m => ({
-                ...m,
-                t1: m.leader
-            }));
-
-            const MatchCard = ({ matchInfo, type }) => {
-                const isDynamic = type === 'dynamic';
-                const borderColor = isDynamic ? 'border-orange-400' : 'border-blue-500';
-                const t2IsTBD = matchInfo.t2.isTBD || matchInfo.t2.name.includes('TBD');
-
-                return (
-                    <div className={`card p-3 mb-3 border-l-4 ${borderColor}`}>
-                        {/* Cabecera */}
-                        <div className="flex justify-between items-center mb-3 pb-1.5 border-b border-gray-100">
-                            <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wide">{matchInfo.title}</span>
-                            <div className="flex gap-2 text-[10px] text-gray-500 font-medium bg-gray-50 px-2 py-0.5 rounded">
-                                <span>🗓️ {matchInfo.date} • {matchInfo.time} COL</span>
-                                <span>📍 {matchInfo.venue}</span>
-                            </div>
-                        </div>
-                        {/* Equipos */}
-                        <div className="flex justify-between items-center text-sm">
-                            <div className="flex items-center gap-2 w-[42%]">
-                                <img src={getFlagUrl(matchInfo.t1.name)} className={`flag shadow-sm ${matchInfo.t1.name.includes('TBD') ? 'opacity-30 grayscale' : ''}`} />
-                                <span className={`font-bold truncate ${matchInfo.t1.name.includes('TBD') ? 'text-gray-400 text-xs' : 'text-gray-900'}`}>{matchInfo.t1.name}</span>
-                            </div>
-                            
-                            <div className="w-[16%] flex justify-center">
-                                <span className="text-gray-300 font-black text-[11px] bg-gray-50 px-2 py-1 rounded">VS</span>
-                            </div>
-
-                            <div className="flex flex-col items-end w-[42%]">
-                                <div className="flex items-center gap-2 justify-end w-full">
-                                    <span className={`font-bold truncate text-right ${t2IsTBD ? 'text-gray-400 text-xs' : 'text-gray-900'}`}>
-                                        {matchInfo.t2.name}
-                                    </span>
-                                    <img src={getFlagUrl(matchInfo.t2.name)} className={`flag shadow-sm ${t2IsTBD ? 'opacity-30 grayscale' : ''}`} />
-                                </div>
-                                {isDynamic && !t2IsTBD && (
-                                    <span className="text-[8px] bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded mt-1 font-bold tracking-wide">PROYECCIÓN</span>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Cuadro de Terceros Dinámico restaurado */}
-                        {isDynamic && (
-                            <div className="bg-orange-50/50 border border-orange-100/60 p-2.5 rounded-lg mt-3">
-                                <p className="text-[10px] font-bold text-orange-800 uppercase tracking-wide mb-2">Candidatos actuales (Mejores 3ros)</p>
-                                <div className="flex flex-wrap gap-2">
-                                    {matchInfo.targets.map(g => {
-                                        const t = getTeam(g, 3);
-                                        if (!t || t.name.includes("TBD")) return null;
-                                        const best = bestThirds.some(bt => bt.name === t.name);
-                                        return (
-                                            <div key={g} className={`flex items-center gap-1.5 px-2 py-1.5 rounded text-[12px] transition-all duration-300 ${best ? 'bg-white border border-orange-300 text-gray-900 font-semibold shadow-sm' : 'bg-gray-100 border border-gray-200 text-gray-400'}`}>
-                                                <img src={getFlagUrl(t.name)} className={`w-4 h-3 rounded-[1px] ${!best && 'opacity-40 grayscale'}`} />
-                                                <span>{t.name}</span>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                                <div className="text-[9px] text-orange-700/60 mt-2.5 flex items-center gap-3 font-medium">
-                                    <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-white border border-orange-400 block"></span> Clasificando</span>
-                                    <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-gray-200 border border-gray-300 block"></span> Fuera del top 8</span>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                );
-            };
+            const phaseMatches = resolvedMatches.filter(m => {
+                if (activePhase === 'final') return m.round === 'final' || m.round === 'tercer';
+                return m.round === activePhase;
+            });
 
             return (
                 <div className="pb-12">
-                    <h2 className="text-xl font-extrabold text-blue-900 mb-4 flex items-center gap-2">
-                        <span className="w-6 h-6 bg-blue-100 text-blue-800 flex items-center justify-center rounded-full text-xs">16</span>
-                        Dieciseisavos de Final
+                    <h2 className="text-xl font-extrabold text-orange-600 mb-4 flex items-center gap-2">
+                        <span className="text-2xl">🏆</span> Fase Final
                     </h2>
                     
-                    <h3 className="text-sm font-bold text-gray-500 uppercase mb-3 ml-2">Emparejamientos Fijos</h3>
-                    <div className="mb-6">
-                        {fixedMatches.map((m, i) => <MatchCard key={`f-${i}`} matchInfo={m} type="fixed" />)}
+                    <div className="flex gap-2 mb-6 overflow-x-auto hide-scrollbar bg-white p-1.5 rounded-lg shadow-sm border border-gray-100">
+                        {phases.map(p => (
+                            <button 
+                                key={p.id}
+                                onClick={() => setActivePhase(p.id)}
+                                className={`flex-1 py-1.5 px-3 text-[11px] uppercase tracking-wider font-bold rounded transition-all whitespace-nowrap ${activePhase === p.id ? 'bg-orange-500 text-white shadow' : 'text-gray-500 hover:bg-gray-50'}`}
+                            >
+                                {p.label}
+                            </button>
+                        ))}
                     </div>
 
-                    <h3 className="text-sm font-bold text-orange-600 uppercase mb-3 ml-2 flex items-center gap-2">
-                        <span>Cruces Dinámicos</span>
-                        <span className="bg-orange-100 text-orange-700 text-[9px] px-1.5 py-0.5 rounded font-bold">Mejores 3ros</span>
-                    </h3>
-                    <div className="mb-8">
-                        {dynamicMatches.map((m, i) => <MatchCard key={`d-${i}`} matchInfo={m} type="dynamic" />)}
-                    </div>
-
-                    {/* FASES FINALES REALES */}
-                    <div className="mt-8 pt-6 border-t-2 border-dashed border-gray-300">
-                        <h2 className="text-xl font-extrabold text-gray-400 mb-4 text-center">Fases Finales</h2>
-                        <div className="space-y-3 opacity-80">
-                            <div className="grid grid-cols-2 gap-2">
-                                <div className="card p-3 bg-gray-50 border border-gray-200 text-center flex flex-col items-center justify-center">
-                                    <span className="font-bold text-gray-600 text-sm">Octavos</span>
-                                    <span className="text-[10px] text-gray-400 mt-0.5">4-7 Jul (8 sedes)</span>
-                                </div>
-                                <div className="card p-3 bg-gray-50 border border-gray-200 text-center flex flex-col items-center justify-center">
-                                    <span className="font-bold text-gray-600 text-sm">Cuartos</span>
-                                    <span className="text-[10px] text-gray-400 mt-0.5">9-11 Jul (4 sedes)</span>
-                                </div>
-                            </div>
-                            
-                            <div className="flex gap-2 justify-center">
-                                <div className="card p-3 bg-gray-50 border border-gray-200 text-center flex flex-col items-center justify-center w-1/2">
-                                    <span className="font-bold text-gray-600 text-sm">Semifinal 1</span>
-                                    <span className="text-[10px] text-gray-400 mt-0.5">14 Jul - 14:00 COL | Dallas</span>
-                                </div>
-                                <div className="card p-3 bg-gray-50 border border-gray-200 text-center flex flex-col items-center justify-center w-1/2">
-                                    <span className="font-bold text-gray-600 text-sm">Semifinal 2</span>
-                                    <span className="text-[10px] text-gray-400 mt-0.5">15 Jul - 14:00 COL | Atlanta</span>
-                                </div>
-                            </div>
-
-                            <div className="flex gap-2 justify-center">
-                                 <div className="card p-3 bg-gray-50 border border-gray-200 text-center flex flex-col items-center justify-center w-full">
-                                    <span className="font-bold text-gray-600 text-sm">3er Puesto</span>
-                                    <span className="text-[10px] text-gray-400 mt-0.5">18 Jul - 16:00 COL | Miami</span>
-                                </div>
-                            </div>
-
-                            <div className="card p-4 bg-gradient-to-r from-gray-200 to-gray-300 border-2 border-gray-300 text-center flex flex-col items-center justify-center shadow-inner mt-2">
-                                <span className="font-black text-gray-700 uppercase tracking-widest">Gran Final</span>
-                                <span className="text-xs font-bold text-gray-600 mt-1">19 Jul - 14:00 COL | Nueva York/NJ</span>
-                            </div>
-                        </div>
+                    <div className="flex flex-col">
+                        {phaseMatches.length > 0 ? (
+                            phaseMatches.map(m => <MatchCard key={m.id} match={m} />)
+                        ) : (
+                            <div className="text-center py-10 text-gray-400 font-medium">Partidos por definir...</div>
+                        )}
                     </div>
                 </div>
             );
@@ -655,7 +706,6 @@
 
             return (
                 <div className="space-y-6 pb-12">
-                    {/* 🔥 NUEVA SECCIÓN: RANKING DE TERCEROS 🔥 */}
                     <div className="card p-4 border-t-4 border-orange-400">
                         <h2 className="text-xl font-extrabold text-gray-800 mb-1 flex items-center gap-2">
                             <span>🔥 Ranking Mejores 3ros</span>
@@ -665,7 +715,6 @@
                         <div className="flex flex-col">
                             {allThirds.map((team, index) => (
                                 <React.Fragment key={team.name}>
-                                    {/* Línea divisoria dramática después del Top 8 */}
                                     {index === 8 && (
                                         <div className="border-t-2 border-dashed border-red-300 my-3 relative">
                                             <span className="absolute -top-2.5 left-1/2 transform -translate-x-1/2 bg-white px-2 text-[9px] font-black text-red-500 uppercase tracking-widest rounded-full border border-red-200">
@@ -680,7 +729,7 @@
                                             </span>
                                             <div className="flex items-center gap-2">
                                                 <img src={getFlagUrl(team.name)} className="w-4 h-3 rounded-[1px] shadow-sm" />
-                                                <span className="font-bold text-gray-900 text-sm">{team.name}</span>
+                                                <span className={`font-bold text-sm ${team.name === 'Colombia' ? 'colombia-text' : 'text-gray-900'}`}>{team.name}</span>
                                                 <span className="text-[9px] text-gray-400 font-bold ml-1">GRP {team.group}</span>
                                             </div>
                                         </div>
@@ -728,15 +777,32 @@
 
         function App() {
             const [activeTab, setActiveTab] = React.useState('grupos');
-            const [isRefreshing, setIsRefreshing] = React.useState(false); // Estado para animar el botón de Refresh
+            const [isRefreshing, setIsRefreshing] = React.useState(false); 
             
-            // Cálculos principales
+            // 1. Calculamos Tablas de Grupos
             const standings = calculateStandings();
             
-            // LÓGICA DEL CARRUSEL MEJORADA: Buscar partidos del día cronológicamente
-            const activeMatches = MATCHES.filter(m => m.played === 'live');
+            // 2. Extraemos Mejores Terceros
+            const thirdPlaces = [];
+            for (const group in standings) {
+                if (standings[group][2]) thirdPlaces.push(standings[group][2]);
+            }
+            const allThirds = thirdPlaces.sort((a, b) => {
+                if (b.pts !== a.pts) return b.pts - a.pts;
+                if (b.gd !== a.gd) return b.gd - a.gd;
+                return b.gf - a.gf;
+            });
+            const bestThirds = allThirds.slice(0, 8); 
+
+            // 3. Calculamos partidos de 16vos dinámicamente con los datos fresquitos
+            const sixteenMatchups = resolveSixteenMatches(standings, bestThirds);
+
+            // 4. Resolvemos todo el árbol de la fase final
+            const resolvedKnockouts = resolveKnockoutTeams(KNOCKOUT_MATCHES, sixteenMatchups);
             
-            // WOW FEATURE: Cambiar el título de la pestaña si hay partidos en vivo
+            const allMatches = [...MATCHES, ...resolvedKnockouts];
+            const activeMatches = allMatches.filter(m => m.played === 'live');
+            
             React.useEffect(() => {
                 if (activeMatches.length > 0) {
                     document.title = `🔴 [LIVE] Mundial 2026`;
@@ -745,56 +811,32 @@
                 }
             }, [activeMatches.length]);
 
-            // Efecto para hacer scroll al inicio al cambiar de pestaña
             React.useEffect(() => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }, [activeTab]);
 
-            // Función para DESTRUIR LA CACHÉ
             const forceRefresh = () => {
                 setIsRefreshing(true);
                 setTimeout(() => {
-                    // Crea una URL con un parámetro aleatorio de tiempo para saltarse la caché sí o sí
                     const url = new URL(window.location.href);
                     url.searchParams.set('v', new Date().getTime());
                     window.location.href = url.toString();
-                }, 400); // Pequeño delay para que se vea la animación
+                }, 400); 
             };
             
-            // 🔥 NUEVA FEATURE: Auto-Refresh (Short Polling) 🔥
             React.useEffect(() => {
                 let interval;
-                // Solo activamos el loop automático si detectamos partidos en estado 'live'
                 if (activeMatches.length > 0) {
-                    // Refrescar cada 3 minutos (180,000 milisegundos)
                     interval = setInterval(() => {
                         forceRefresh();
                     }, 180000);
                 }
-                // Limpieza de memoria (buena práctica en React)
                 return () => {
                     if (interval) clearInterval(interval);
                 };
             }, [activeMatches.length]);
 
-            // Calcular TODO el ranking de los 3ros
-            const thirdPlaces = [];
-            for (const group in standings) {
-                if (standings[group][2]) thirdPlaces.push(standings[group][2]);
-            }
-            
-            // Ordenar a todos los terceros con las reglas oficiales
-            const allThirds = thirdPlaces.sort((a, b) => {
-                if (b.pts !== a.pts) return b.pts - a.pts;
-                if (b.gd !== a.gd) return b.gd - a.gd;
-                return b.gf - a.gf;
-            });
-            
-            // Extraer el Top 8 para usarlo en otras vistas (ej. KnockoutView)
-            const bestThirds = allThirds.slice(0, 8); 
-
-            // FIX FECHA DINÁMICA
-            const playedMatches = MATCHES.filter(m => m.played === true || m.played === 'live');
+            const playedMatches = allMatches.filter(m => m.played === true || m.played === 'live');
             let latestDateObj = { date: "19 Jun" };
             if (playedMatches.length > 0) {
                 latestDateObj = playedMatches.reduce((latest, current) => {
@@ -814,7 +856,7 @@
             if (activeMatches.length > 0) {
                 todayLabel = activeMatches[0].date;
             } else {
-                const unplayedMatches = MATCHES.filter(m => m.played === false);
+                const unplayedMatches = allMatches.filter(m => m.played === false);
                 if (unplayedMatches.length > 0) {
                     unplayedMatches.sort((a, b) => {
                         const getScore = (dateStr) => {
@@ -825,16 +867,15 @@
                     });
                     todayLabel = unplayedMatches[0].date;
                 } else {
-                    todayLabel = MATCHES[MATCHES.length - 1].date;
+                    todayLabel = allMatches[allMatches.length - 1].date;
                 }
             }
             
-            currentDayMatches = MATCHES.filter(m => m.date === todayLabel);
+            currentDayMatches = allMatches.filter(m => m.date === todayLabel);
             currentDayMatches.sort((a, b) => a.time.localeCompare(b.time));
 
             return (
                 <div className="max-w-md mx-auto min-h-screen relative flex flex-col">
-                    {/* Header Pega al Top */}
                     <header className="bg-gradient-to-r from-blue-900 to-teal-800 text-white p-6 rounded-b-3xl shadow-lg sticky top-0 z-10">
                         <div className="flex justify-between items-center">
                             <div>
@@ -844,7 +885,6 @@
                                 <p className="text-teal-200 text-sm font-medium">Visualizador Interactivo</p>
                             </div>
                             
-                            {/* NUEVO UI: Contenedor con Fecha y Botón de Recarga Anti-Caché */}
                             <div className="flex items-center gap-2">
                                 <div className="text-right text-xs bg-white/10 px-3 py-1.5 rounded-lg border border-white/20 backdrop-blur-sm">
                                     <span className="block font-bold opacity-80">Datos al</span>
@@ -862,13 +902,12 @@
                             </div>
                         </div>
 
-                        {/* Tabs Navigation */}
                         <div className="flex gap-6 mt-6 border-b border-white/20 overflow-x-auto hide-scrollbar">
                             <button 
                                 onClick={() => setActiveTab('grupos')}
                                 className={`pb-2 px-1 text-sm whitespace-nowrap transition-all duration-300 ${activeTab === 'grupos' ? 'border-b-4 border-teal-400 font-bold text-white' : 'text-teal-200/80 hover:text-white'}`}
                             >
-                                Tablas de Grupos
+                                Fase de Grupos
                             </button>
                             <button 
                                 onClick={() => setActiveTab('cruces')}
@@ -885,17 +924,13 @@
                         </div>
                     </header>
 
-                    {/* Content Area */}
                     <main className="flex-1 p-4 mt-2">
-                        {activeTab === 'grupos' && (
-                            <>
-                                <TodayMatchesCarousel matches={currentDayMatches} todayLabel={todayLabel} />
-                                <StandingsView standings={standings} bestThirds={bestThirds} />
-                            </>
+                        {(activeTab === 'grupos' || activeTab === 'cruces') && (
+                            <TodayMatchesCarousel matches={currentDayMatches} todayLabel={todayLabel} />
                         )}
-                        {activeTab === 'cruces' && <KnockoutView standings={standings} bestThirds={bestThirds} />}
-                        
-                        {/* 🔥 Le pasamos a StatsView TODO el array de terceros 🔥 */}
+
+                        {activeTab === 'grupos' && <StandingsView standings={standings} bestThirds={bestThirds} />}
+                        {activeTab === 'cruces' && <KnockoutView resolvedMatches={resolvedKnockouts} />}
                         {activeTab === 'estadisticas' && <StatsView allThirds={allThirds} />}
                     </main>
                     
@@ -904,7 +939,6 @@
                             Aplicación interactiva diseñada por Kineti (<a href="https://www.kineti.com.co" target="_blank" rel="noopener noreferrer" className="text-teal-600 hover:underline font-medium">kineti.com.co</a>). Los cruces dinámicos se basan en proyecciones del momento.
                         </p>
                         
-                        {/* CONTADOR DE VISITAS FUNCIONAL */}
                         <div className="flex flex-col items-center gap-1">
                             <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Visitas Familiares</span>
                             <img 
