@@ -183,7 +183,7 @@
         ];
 
         const KNOCKOUT_MATCHES = [
-            // --- 16VOS DE FINAL (Los equipos se calculan dinámicamente) ---
+            // --- 16VOS DE FINAL ---
             { id: 'm73', round: '16vos', date: '28 Jun', time: '14:00', venue: 'Los Ángeles', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
             { id: 'm74', round: '16vos', date: '29 Jun', time: '15:30', venue: 'Boston', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
             { id: 'm75', round: '16vos', date: '29 Jun', time: '20:00', venue: 'Monterrey', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
@@ -201,7 +201,7 @@
             { id: 'm87', round: '16vos', date: '3 Jul', time: '20:30', venue: 'Kansas City', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
             { id: 'm88', round: '16vos', date: '3 Jul', time: '13:00', venue: 'Dallas', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
 
-            // --- OCTAVOS DE FINAL (Dependencias arregladas basadas en cuadro oficial) ---
+            // --- OCTAVOS DE FINAL ---
             { id: 'm89', round: 'octavos', homeRef: 'm73', awayRef: 'm75', date: '4 Jul', time: '12:00', venue: 'Houston', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
             { id: 'm90', round: 'octavos', homeRef: 'm74', awayRef: 'm77', date: '4 Jul', time: '16:00', venue: 'Filadelfia', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
             { id: 'm91', round: 'octavos', homeRef: 'm76', awayRef: 'm78', date: '5 Jul', time: '15:00', venue: 'Nueva York/NJ', hGoals: 0, aGoals: 0, played: false, scorers: { home: [], away: [] } },
@@ -282,69 +282,27 @@
         };
 
         // 🔥 ALGORITMO OFICIAL DE LA FIFA PARA 16VOS 🔥
+        // Como la fase de grupos finalizó, se reemplaza la fórmula dinámica 
+        // por la organización oficial provista en el fixture.
         const resolveSixteenMatches = (standings, bestThirds) => {
-            const getTeam = (g, p) => standings[g] && standings[g][p-1] ? standings[g][p-1].name : `TBD (Grp ${g})`;
-            
-            const matchups = {
-                m73: { home: getTeam('A',2), away: getTeam('B',2) },
-                m75: { home: getTeam('F',1), away: getTeam('C',2) },
-                m76: { home: getTeam('C',1), away: getTeam('F',2) },
-                m78: { home: getTeam('E',2), away: getTeam('I',2) },
-                m83: { home: getTeam('K',2), away: getTeam('L',2) },
-                m84: { home: getTeam('H',1), away: getTeam('J',2) },
-                m86: { home: getTeam('J',1), away: getTeam('H',2) },
-                m88: { home: getTeam('D',2), away: getTeam('G',2) }
+            return {
+                m73: { home: 'Sudáfrica', away: 'Canadá' },
+                m74: { home: 'Alemania', away: 'Paraguay' },
+                m75: { home: 'Países Bajos', away: 'Marruecos' },
+                m76: { home: 'Brasil', away: 'Japón' },
+                m77: { home: 'Francia', away: 'Suecia' },
+                m78: { home: 'Costa de Marfil', away: 'Noruega' },
+                m79: { home: 'México', away: 'Ecuador' },
+                m80: { home: 'Inglaterra', away: 'RD Congo' },
+                m81: { home: 'Estados Unidos', away: 'Bosnia' },
+                m82: { home: 'Bélgica', away: 'Senegal' },
+                m83: { home: 'Portugal', away: 'Croacia' },
+                m84: { home: 'España', away: 'Austria' },
+                m85: { home: 'Suiza', away: 'Argelia' },
+                m86: { home: 'Argentina', away: 'Cabo Verde' },
+                m87: { home: 'Colombia', away: 'Ghana' },
+                m88: { home: 'Australia', away: 'Egipto' }
             };
-
-            const dynamicTargets = {
-                m74: { home: getTeam('E',1), targets: ['A','B','C','D','F'] },
-                m77: { home: getTeam('I',1), targets: ['C','D','F','G','H'] },
-                m79: { home: getTeam('A',1), targets: ['C','E','F','H','I'] },
-                m80: { home: getTeam('L',1), targets: ['E','H','I','J','K'] },
-                m81: { home: getTeam('D',1), targets: ['B','E','F','I','J'] },
-                m82: { home: getTeam('G',1), targets: ['A','E','H','I','J'] },
-                m85: { home: getTeam('B',1), targets: ['E','F','G','I','J'] },
-                m87: { home: getTeam('K',1), targets: ['D','E','I','J','L'] }
-            };
-
-            let availableThirds = [...bestThirds];
-            let assignedThirds = {};
-
-            // Búsqueda Greedy para asignar los mejores terceros según las reglas de cruce
-            let changed = true;
-            while (changed && availableThirds.length > 0) {
-                changed = false;
-                let minOptions = 999;
-                let matchIdToFill = null;
-
-                for (const mId in dynamicTargets) {
-                    if (!assignedThirds[mId]) {
-                        const validOptions = availableThirds.filter(t => dynamicTargets[mId].targets.includes(t.group));
-                        if (validOptions.length > 0 && validOptions.length < minOptions) {
-                            minOptions = validOptions.length;
-                            matchIdToFill = mId;
-                        }
-                    }
-                }
-
-                if (matchIdToFill) {
-                    const validOptions = availableThirds.filter(t => dynamicTargets[matchIdToFill].targets.includes(t.group));
-                    const selected = validOptions[0];
-                    assignedThirds[matchIdToFill] = selected.name;
-                    availableThirds = availableThirds.filter(t => t.name !== selected.name);
-                    changed = true;
-                }
-            }
-
-            // Llenar vacíos si la fase de grupos no ha terminado
-            for (const mId in dynamicTargets) {
-                if (!assignedThirds[mId]) {
-                    assignedThirds[mId] = availableThirds.length > 0 ? availableThirds.shift().name : `TBD (3º ${dynamicTargets[mId].targets.join('/')})`;
-                }
-                matchups[mId] = { home: dynamicTargets[mId].home, away: assignedThirds[mId] };
-            }
-
-            return matchups;
         };
 
         const resolveKnockoutTeams = (matches, sixteenMatchups) => {
@@ -776,7 +734,8 @@
         };
 
         function App() {
-            const [activeTab, setActiveTab] = React.useState('grupos');
+            // 👉 INICIA DIRECTO EN CRUCES
+            const [activeTab, setActiveTab] = React.useState('cruces');
             const [isRefreshing, setIsRefreshing] = React.useState(false); 
             
             // 1. Calculamos Tablas de Grupos
@@ -794,7 +753,7 @@
             });
             const bestThirds = allThirds.slice(0, 8); 
 
-            // 3. Calculamos partidos de 16vos dinámicamente con los datos fresquitos
+            // 3. Calculamos partidos de 16vos 
             const sixteenMatchups = resolveSixteenMatches(standings, bestThirds);
 
             // 4. Resolvemos todo el árbol de la fase final
@@ -902,13 +861,8 @@
                             </div>
                         </div>
 
+                        {/* 👉 TABS REORGANIZADOS: Cruces -> Estadísticas -> Grupos */}
                         <div className="flex gap-6 mt-6 border-b border-white/20 overflow-x-auto hide-scrollbar">
-                            <button 
-                                onClick={() => setActiveTab('grupos')}
-                                className={`pb-2 px-1 text-sm whitespace-nowrap transition-all duration-300 ${activeTab === 'grupos' ? 'border-b-4 border-teal-400 font-bold text-white' : 'text-teal-200/80 hover:text-white'}`}
-                            >
-                                Fase de Grupos
-                            </button>
                             <button 
                                 onClick={() => setActiveTab('cruces')}
                                 className={`pb-2 px-1 text-sm whitespace-nowrap transition-all duration-300 ${activeTab === 'cruces' ? 'border-b-4 border-orange-400 font-bold text-white' : 'text-teal-200/80 hover:text-white'}`}
@@ -921,6 +875,12 @@
                             >
                                 Estadísticas
                             </button>
+                            <button 
+                                onClick={() => setActiveTab('grupos')}
+                                className={`pb-2 px-1 text-sm whitespace-nowrap transition-all duration-300 ${activeTab === 'grupos' ? 'border-b-4 border-teal-400 font-bold text-white' : 'text-teal-200/80 hover:text-white'}`}
+                            >
+                                Fase de Grupos
+                            </button>
                         </div>
                     </header>
 
@@ -929,9 +889,10 @@
                             <TodayMatchesCarousel matches={currentDayMatches} todayLabel={todayLabel} />
                         )}
 
-                        {activeTab === 'grupos' && <StandingsView standings={standings} bestThirds={bestThirds} />}
+                        {/* 👉 COMPONENTES REORDENADOS */}
                         {activeTab === 'cruces' && <KnockoutView resolvedMatches={resolvedKnockouts} />}
                         {activeTab === 'estadisticas' && <StatsView allThirds={allThirds} />}
+                        {activeTab === 'grupos' && <StandingsView standings={standings} bestThirds={bestThirds} />}
                     </main>
                     
                     <footer className="flex flex-col items-center justify-center p-5 text-xs text-gray-400 border-t bg-gray-50 mt-auto gap-4">
