@@ -634,13 +634,19 @@
 
         const StatsView = ({ allThirds }) => {
             const renderRow = (item, index, icon) => (
-                <div key={index} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors px-2 rounded">
+                <div key={index} className={`flex items-center justify-between py-3 border-b border-gray-100 last:border-0 transition-colors px-2 rounded ${index === 0 ? 'bg-yellow-50/50 border-l-2 border-l-yellow-400' : 'hover:bg-gray-50'}`}>
                     <div className="flex items-center gap-3">
-                        <span className={`w-5 text-center font-bold ${index === 0 ? 'text-yellow-500 text-lg' : index === 1 ? 'text-gray-400' : index === 2 ? 'text-amber-700' : 'text-gray-300'}`}>
-                            {index + 1}
-                        </span>
+                        <div className="w-6 flex justify-center items-center">
+                            {index === 0 ? <span className="text-xl drop-shadow-sm" title="1er Lugar">🥇</span> :
+                             index === 1 ? <span className="text-lg drop-shadow-sm" title="2do Lugar">🥈</span> :
+                             index === 2 ? <span className="text-lg drop-shadow-sm" title="3er Lugar">🥉</span> :
+                             <span className="font-bold text-gray-400">{index + 1}</span>}
+                        </div>
                         <div>
-                            <p className="font-bold text-gray-900 text-sm leading-tight">{item.name}</p>
+                            <p className="font-bold text-gray-900 text-sm leading-tight flex items-center gap-1">
+                                {item.name}
+                                {index === 0 && <span className="text-[10px] animate-pulse">🔥</span>}
+                            </p>
                             <div className="flex items-center gap-1.5 mt-1">
                                 <img src={getFlagUrl(item.team)} className="w-4 h-3 rounded-[1px] shadow-sm" />
                                 <span className="text-xs text-gray-500">{item.team}</span>
@@ -664,6 +670,27 @@
 
             return (
                 <div className="space-y-6 pb-12">
+                    {/* 1. GOLEADORES */}
+                    <div className="card p-4 border-t-4 border-yellow-400">
+                        <h2 className="text-xl font-extrabold text-gray-800 mb-4 flex items-center gap-2">
+                            <span className="text-2xl">⚽</span> Top Goleadores
+                        </h2>
+                        <div className="flex flex-col">
+                            {GOLEADORES.map((item, idx) => renderRow(item, idx, '⚽'))}
+                        </div>
+                    </div>
+
+                    {/* 2. ASISTENCIAS */}
+                    <div className="card p-4 border-t-4 border-blue-400">
+                        <h2 className="text-xl font-extrabold text-gray-800 mb-4 flex items-center gap-2">
+                            <span className="text-2xl">👟</span> Top Asistencias
+                        </h2>
+                        <div className="flex flex-col">
+                            {ASISTENCIAS.map((item, idx) => renderRow(item, idx, '👟'))}
+                        </div>
+                    </div>
+
+                    {/* 3. RANKING MEJORES 3ROS */}
                     <div className="card p-4 border-t-4 border-orange-400">
                         <h2 className="text-xl font-extrabold text-gray-800 mb-1 flex items-center gap-2">
                             <span>🔥 Ranking Mejores 3ros</span>
@@ -709,24 +736,6 @@
                                     </div>
                                 </React.Fragment>
                             ))}
-                        </div>
-                    </div>
-
-                    <div className="card p-4 border-t-4 border-yellow-400">
-                        <h2 className="text-xl font-extrabold text-gray-800 mb-4 flex items-center gap-2">
-                            <span>Goleadores</span>
-                        </h2>
-                        <div className="flex flex-col">
-                            {GOLEADORES.map((item, idx) => renderRow(item, idx, '⚽'))}
-                        </div>
-                    </div>
-
-                    <div className="card p-4 border-t-4 border-blue-400">
-                        <h2 className="text-xl font-extrabold text-gray-800 mb-4 flex items-center gap-2">
-                            <span>Asistencias</span>
-                        </h2>
-                        <div className="flex flex-col">
-                            {ASISTENCIAS.map((item, idx) => renderRow(item, idx, '👟'))}
                         </div>
                     </div>
                 </div>
