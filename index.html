@@ -196,8 +196,10 @@
             { id: 'm77', round: '16vos', date: '30 Jun', time: '16:00', venue: 'Nueva York/NJ', hGoals: 3, aGoals: 0, played: true, extraTime: false, penalties: false, hPens: 0, aPens: 0, penSequence: { home: [], away: [] }, scorers: { home: ["K. Mbappé 45'" , "B. Barcola 53'" , "K. Mbappé 45'"], away: [] } },
             //Costa de Marfil vs Noruega
             { id: 'm78', round: '16vos', date: '30 Jun', time: '12:00', venue: 'Dallas', hGoals: 1, aGoals: 2, played: true, extraTime: false, penalties: false, hPens: 0, aPens: 0, penSequence: { home: [], away: [] }, scorers: { home: ["A. Diallo 74'"], away: ["A. Nusa 39'" , "E. Haaland 86'"] } },
-            //México vs Ecuador
-            { id: 'm79', round: '16vos', date: '30 Jun', time: '20:00', venue: 'CDMX', hGoals: 0, aGoals: 0, played: false, extraTime: false, penalties: false, hPens: 0, aPens: 0, penSequence: { home: [], away: [] }, scorers: { home: [], away: [] } },
+            
+            // 🔥 MÉXICO VS ECUADOR ESTÁ EN ESTADO DEMORADO PARA DEMOSTRACIÓN 🔥
+            { id: 'm79', round: '16vos', date: '30 Jun', time: '20:00', venue: 'CDMX', hGoals: 0, aGoals: 0, played: 'delayed', extraTime: false, penalties: false, hPens: 0, aPens: 0, penSequence: { home: [], away: [] }, scorers: { home: [], away: [] } },
+            
             //Inglaterra vs Congo
             { id: 'm80', round: '16vos', date: '1 Jul', time: '11:00', venue: 'Atlanta', hGoals: 0, aGoals: 0, played: false, extraTime: false, penalties: false, hPens: 0, aPens: 0, penSequence: { home: [], away: [] }, scorers: { home: [], away: [] } },
             //Estados Unidos vs Bosnia
@@ -275,7 +277,8 @@
                     }
                 });
 
-                if (m.played) {
+                // ESTRICTO: Solo sumar puntos si es true o 'live'. Los demorados no suman hasta que arranquen.
+                if (m.played === true || m.played === 'live') {
                     const h = groups[m.group][m.home];
                     const a = groups[m.group][m.away];
                     
@@ -323,13 +326,14 @@
 
         const resolveKnockoutTeams = (matches, sixteenMatchups) => {
             const getWinner = (match, getLoser = false) => {
-                if (!match.played || match.played === 'live') return getLoser ? `Perdedor ${match.id.replace('m', 'P')}` : `Ganador ${match.id.replace('m', 'P')}`;
+                // ESTRICTO: Un partido delayed no puede avanzar equipos aún
+                if (match.played !== true && match.played !== 'live') {
+                    return getLoser ? `Perdedor ${match.id.replace('m', 'P')}` : `Ganador ${match.id.replace('m', 'P')}`;
+                }
                 
-                // Resuelve primero por goles
                 if (match.hGoals > match.aGoals) return getLoser ? match.away : match.home;
                 if (match.aGoals > match.hGoals) return getLoser ? match.home : match.away;
                 
-                // Si hay empate en goles, define por penales si el booleano es explícitamente true
                 if (match.hGoals === match.aGoals && match.penalties === true && match.hPens !== undefined && match.aPens !== undefined) {
                     if (match.hPens > match.aPens) return getLoser ? match.away : match.home;
                     if (match.aPens > match.hPens) return getLoser ? match.home : match.away;
@@ -360,7 +364,6 @@
             return Object.values(resolvedMatches);
         };
 
-        // CANDADOS ESTRICTOS ACTUALIZADOS (Ignoran campos en cero si no es true expresamente)
         const isExtraTime = (m) => m.extraTime === true;
         const isPenalties = (m) => m.penalties === true;
 
@@ -368,7 +371,12 @@
             const isTBD = (name) => !name || name.includes('TBD') || name.includes('Ganador') || name.includes('Perdedor');
             const isColombia = (name) => name === 'Colombia';
             const hasColombia = isColombia(m.home) || isColombia(m.away);
+            
+            // VALIDADORES DE ESTADO (true | 'live' | 'delayed' | false)
             const isLive = m.played === 'live';
+            const isDelayed = m.played === 'delayed';
+            const hasScore = m.played === true || m.played === 'live';
+            
             const isColombiaLive = hasColombia && isLive;
             
             let cardStyle = "card p-2 border-l-4 flex flex-col transition-all duration-300 mb-2 ";
@@ -378,7 +386,9 @@
                 cardStyle += "border-yellow-300 bg-gradient-to-br from-yellow-50/20 via-blue-50/10 to-red-50/10";
             } else if (isLive) {
                 cardStyle += "border-red-500 bg-red-50/60 ring-1 ring-red-100 shadow-sm";
-            } else if (m.played) {
+            } else if (isDelayed) {
+                cardStyle += "border-orange-500 bg-orange-50/60 ring-1 ring-orange-100 shadow-sm";
+            } else if (m.played === true) {
                 cardStyle += "border-gray-300 bg-gray-50/50";
             } else {
                 cardStyle += "border-blue-500 bg-white";
@@ -403,14 +413,16 @@
                             <span className="text-[9px] font-black text-gray-400 tracking-wider">
                                 {m.group ? `GRP ${m.group}` : m.round.substring(0,3).toUpperCase()}
                             </span>
-                            <span className={`text-[10px] font-bold mt-0.5 ${isLive ? 'text-red-600' : 'text-gray-600'}`}>{m.time}</span>
+                            <span className={`text-[10px] font-bold mt-0.5 ${isLive ? 'text-red-600' : isDelayed ? 'text-orange-600' : 'text-gray-600'}`}>
+                                {m.time}
+                            </span>
                         </div>
                         
                         <div className="flex-1 flex flex-col min-w-0 pr-1 py-0.5">
                             <div className="flex justify-between items-center w-full">
                                 {/* Local */}
                                 <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-end">
-                                    <span className={`text-xs truncate text-right ${isTBD(m.home) ? 'text-gray-400' : isColombia(m.home) ? 'colombia-text' : (m.played && (m.hGoals > m.aGoals || (isPenalties(m) && m.hPens > m.aPens)) ? 'font-bold text-gray-900' : 'font-medium text-gray-600')}`}>
+                                    <span className={`text-xs truncate text-right ${isTBD(m.home) ? 'text-gray-400' : isColombia(m.home) ? 'colombia-text' : (hasScore && (m.hGoals > m.aGoals || (isPenalties(m) && m.hPens > m.aPens)) ? 'font-bold text-gray-900' : 'font-medium text-gray-600')}`}>
                                         {m.home}
                                     </span>
                                     {!isTBD(m.home) && (
@@ -432,14 +444,19 @@
                                             )}
                                         </div>
                                     )}
+                                    {isDelayed && (
+                                        <div className="flex gap-1 items-center mb-0.5">
+                                            <span className="text-[8px] bg-orange-500 text-white px-1.5 py-[2px] rounded animate-pulse font-black tracking-widest leading-none shadow-sm shadow-orange-500/30">DEMORADO</span>
+                                        </div>
+                                    )}
+                                    
                                     {/* Marcador Principal y Penales */}
-                                    {m.played ? (
+                                    {hasScore ? (
                                         <div className="flex flex-col items-center">
                                             <span className={`text-xs font-black px-2 py-0.5 rounded flex items-center leading-none ${isLive ? 'text-red-700 bg-red-100' : 'text-gray-800 bg-gray-200/60'}`}>
                                                 {m.hGoals} - {m.aGoals}
                                             </span>
                                             
-                                            {/* Píldora de Penales Elegante (Candado activo: Solo si penalties: true) */}
                                             {isPenalties(m) && m.hPens !== undefined && m.aPens !== undefined && (
                                                 <div className="flex items-center gap-1 bg-purple-100 px-1.5 py-0.5 rounded border border-purple-200/60 shadow-[0_1px_2px_rgba(168,85,247,0.15)] mt-1 whitespace-nowrap">
                                                     <span className="font-black text-[10px] text-purple-800 tabular-nums">{m.hPens}</span>
@@ -449,13 +466,12 @@
                                                 </div>
                                             )}
                                             
-                                            {/* ExtraTiempo Fix: Mostrar "TE" si cerró en tiempo extra sin penales */}
                                             {!isLive && isExtraTime(m) && !isPenalties(m) && (
                                                 <span className="text-[8px] text-gray-500 font-bold mt-1 leading-none tracking-widest">ET</span>
                                             )}
                                         </div>
                                     ) : (
-                                        <span className="text-[10px] font-bold text-gray-300 bg-gray-50 px-1.5 py-0.5 rounded">VS</span>
+                                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${isDelayed ? 'bg-orange-100 text-orange-500' : 'text-gray-300 bg-gray-50'}`}>VS</span>
                                     )}
                                 </div>
                                 
@@ -464,14 +480,14 @@
                                     {!isTBD(m.away) && (
                                         <img src={getFlagUrl(m.away)} className="w-4 h-3 rounded-[1px] opacity-90 shrink-0" />
                                     )}
-                                    <span className={`text-xs truncate ${isTBD(m.away) ? 'text-gray-400' : isColombia(m.away) ? 'colombia-text' : (m.played && (m.aGoals > m.hGoals || (isPenalties(m) && m.aPens > m.hPens)) ? 'font-bold text-gray-900' : 'font-medium text-gray-600')}`}>
+                                    <span className={`text-xs truncate ${isTBD(m.away) ? 'text-gray-400' : isColombia(m.away) ? 'colombia-text' : (hasScore && (m.aGoals > m.hGoals || (isPenalties(m) && m.aPens > m.hPens)) ? 'font-bold text-gray-900' : 'font-medium text-gray-600')}`}>
                                         {m.away}
                                     </span>
                                 </div>
                             </div>
 
                             {/* Anotadores */}
-                            {m.scorers && (m.scorers.home.length > 0 || m.scorers.away.length > 0) && (
+                            {m.scorers && (m.scorers.home.length > 0 || m.scorers.away.length > 0) && hasScore && (
                                 <div className="flex justify-between items-start mt-1.5 pt-1 border-t border-gray-200/60 w-full">
                                     <div className="flex-1 flex flex-col items-end pr-1 min-w-0">
                                         {m.scorers.home.map((s, idx) => (
@@ -493,8 +509,8 @@
                         </div>
                     </div>
 
-                    {/* Secuencia Visual de Penales (Candado activo: Solo si penalties: true Y los arreglos no están vacíos) */}
-                    {isPenalties(m) && m.penSequence && (m.penSequence.home.length > 0 || m.penSequence.away.length > 0) && (
+                    {/* Secuencia Visual de Penales */}
+                    {isPenalties(m) && hasScore && m.penSequence && (m.penSequence.home.length > 0 || m.penSequence.away.length > 0) && (
                         <div className="flex justify-center items-center mt-2 pt-2 border-t border-gray-100/60 w-full gap-2.5 pb-0.5">
                             <div className="flex gap-1.5">
                                 {m.penSequence.home.map((res, i) => (
@@ -517,13 +533,14 @@
             );
         };
 
-        const TodayMatchesCarousel = ({ matches, todayLabel }) => {
+        const TodayMatchesCarousel = ({ matches, todayLabel, hasLive, hasDelayed }) => {
             if (!matches || matches.length === 0) return null;
             return (
                 <div className="mb-6">
                     <div className="flex justify-between items-center mb-3">
                         <h3 className="text-sm font-bold text-gray-800 flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                            {hasLive ? <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span> : 
+                             hasDelayed ? <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span> : null}
                             Partidos del Día
                         </h3>
                         <span className="text-xs text-gray-500 font-medium px-2 py-0.5 bg-gray-100 rounded">{todayLabel}</span>
@@ -604,10 +621,14 @@
                                 <div className="space-y-1.5">
                                     {MATCHES.filter(m => m.group === groupName).map(m => {
                                         const isColombia = m.home === 'Colombia' || m.away === 'Colombia';
+                                        const hasScore = m.played === true || m.played === 'live';
+                                        
                                         let bgClass = "bg-white border border-gray-100";
                                         if (m.played === 'live') {
                                             bgClass = isColombia ? "bg-gradient-to-br from-yellow-50 via-blue-50 to-red-50 border border-yellow-400 shadow-md ring-1 ring-yellow-400" : "bg-red-50/60 border border-red-200";
-                                        } else if (m.played) {
+                                        } else if (m.played === 'delayed') {
+                                            bgClass = isColombia ? "bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50 border border-orange-400 shadow-md ring-1 ring-orange-400" : "bg-orange-50/60 border border-orange-200";
+                                        } else if (m.played === true) {
                                             bgClass = isColombia ? "bg-gradient-to-br from-yellow-50/20 via-blue-50/10 to-red-50/10 border border-yellow-200" : "bg-gray-50";
                                         }
 
@@ -615,10 +636,10 @@
                                             <div key={m.id} className={`flex justify-between items-center text-[11px] p-2 rounded transition-colors ${bgClass}`}>
                                                 <div className="flex gap-1.5 text-gray-500 w-20 shrink-0">
                                                     <span>{m.date}</span> 
-                                                    <span className={`${m.played === 'live' ? 'font-black text-red-600' : 'font-bold text-blue-900'}`}>{m.time}</span>
+                                                    <span className={`${(m.played === 'live' || m.played === 'delayed') ? (m.played === 'live' ? 'font-black text-red-600' : 'font-black text-orange-600') : 'font-bold text-blue-900'}`}>{m.time}</span>
                                                 </div>
                                                 <div className="flex-1 flex justify-between items-center px-2 min-w-0">
-                                                    <div className={`flex items-center gap-1.5 flex-1 min-w-0 ${m.played && m.hGoals > m.aGoals ? 'font-bold text-gray-900' : 'text-gray-600'}`}>
+                                                    <div className={`flex items-center gap-1.5 flex-1 min-w-0 ${hasScore && m.hGoals > m.aGoals ? 'font-bold text-gray-900' : 'text-gray-600'}`}>
                                                         <img src={getFlagUrl(m.home)} className="w-3.5 h-2.5 rounded-[1px] opacity-80 shrink-0" />
                                                         <span className={`truncate ${m.home === 'Colombia' ? 'colombia-text' : ''}`}>{m.home}</span>
                                                     </div>
@@ -629,16 +650,22 @@
                                                                 <span className="text-[8px] bg-red-600 text-white px-1.5 py-[2px] rounded animate-pulse font-black tracking-widest leading-none shadow-sm">LIVE</span>
                                                             </div>
                                                         )}
-                                                        {m.played ? (
+                                                        {m.played === 'delayed' && (
+                                                            <div className="flex gap-1 items-center mb-0.5">
+                                                                <span className="text-[8px] bg-orange-500 text-white px-1.5 py-[2px] rounded animate-pulse font-black tracking-widest leading-none shadow-sm">DEMORADO</span>
+                                                            </div>
+                                                        )}
+                                                        
+                                                        {hasScore ? (
                                                             <span className={`${m.played === 'live' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'} px-1.5 py-0.5 rounded whitespace-nowrap inline-block leading-none`}>
                                                                 {m.hGoals} - {m.aGoals}
                                                             </span>
                                                         ) : (
-                                                            <span className="text-gray-300 whitespace-nowrap inline-block leading-none mt-1">vs</span>
+                                                            <span className={`whitespace-nowrap inline-block leading-none mt-1 ${m.played === 'delayed' ? 'text-orange-400' : 'text-gray-300'}`}>vs</span>
                                                         )}
                                                     </div>
 
-                                                    <div className={`flex items-center gap-1.5 flex-1 justify-end min-w-0 ${m.played && m.aGoals > m.hGoals ? 'font-bold text-gray-900' : 'text-gray-600'}`}>
+                                                    <div className={`flex items-center gap-1.5 flex-1 justify-end min-w-0 ${hasScore && m.aGoals > m.hGoals ? 'font-bold text-gray-900' : 'text-gray-600'}`}>
                                                         <span className={`truncate text-right ${m.away === 'Colombia' ? 'colombia-text' : ''}`}>{m.away}</span>
                                                         <img src={getFlagUrl(m.away)} className="w-3.5 h-2.5 rounded-[1px] opacity-80 shrink-0" />
                                                     </div>
@@ -736,7 +763,6 @@
 
             return (
                 <div className="space-y-6 pb-12">
-                    {/* GOLEADORES */}
                     <div className="card p-4 border-t-4 border-yellow-400">
                         <h2 className="text-xl font-extrabold text-gray-800 mb-4 flex items-center gap-2">
                             <span className="text-2xl">⚽</span> Top Goleadores
@@ -746,7 +772,6 @@
                         </div>
                     </div>
 
-                    {/* ASISTENCIAS */}
                     <div className="card p-4 border-t-4 border-blue-400">
                         <h2 className="text-xl font-extrabold text-gray-800 mb-4 flex items-center gap-2">
                             <span className="text-2xl">👟</span> Top Asistencias
@@ -756,7 +781,6 @@
                         </div>
                     </div>
 
-                    {/* RANKING MEJORES 3ROS */}
                     <div className="card p-4 border-t-4 border-orange-400">
                         <h2 className="text-xl font-extrabold text-gray-800 mb-1 flex items-center gap-2">
                             <span>🔥 Ranking Mejores 3ros</span>
@@ -830,14 +854,17 @@
             
             const allMatches = [...MATCHES, ...resolvedKnockouts];
             const activeMatches = allMatches.filter(m => m.played === 'live');
+            const delayedMatches = allMatches.filter(m => m.played === 'delayed');
             
             React.useEffect(() => {
                 if (activeMatches.length > 0) {
                     document.title = `🔴 [LIVE] Mundial 2026`;
+                } else if (delayedMatches.length > 0) {
+                    document.title = `🟠 [DELAYED] Mundial 2026`;
                 } else {
                     document.title = `Mundial 2026 - Visualizador`;
                 }
-            }, [activeMatches.length]);
+            }, [activeMatches.length, delayedMatches.length]);
 
             React.useEffect(() => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -854,7 +881,7 @@
             
             React.useEffect(() => {
                 let interval;
-                if (activeMatches.length > 0) {
+                if (activeMatches.length > 0 || delayedMatches.length > 0) {
                     interval = setInterval(() => {
                         forceRefresh();
                     }, 180000);
@@ -862,7 +889,7 @@
                 return () => {
                     if (interval) clearInterval(interval);
                 };
-            }, [activeMatches.length]);
+            }, [activeMatches.length, delayedMatches.length]);
 
             const playedMatches = allMatches.filter(m => m.played === true || m.played === 'live');
             let latestDateObj = { date: "19 Jun" };
@@ -883,8 +910,11 @@
 
             if (activeMatches.length > 0) {
                 todayLabel = activeMatches[0].date;
+            } else if (delayedMatches.length > 0) {
+                todayLabel = delayedMatches[0].date;
             } else {
-                const unplayedMatches = allMatches.filter(m => m.played === false);
+                // Ahora los partidos demorados son tomados en cuenta como "no jugados" para mostrarlos en el focus de hoy
+                const unplayedMatches = allMatches.filter(m => m.played === false || m.played === 'delayed');
                 if (unplayedMatches.length > 0) {
                     unplayedMatches.sort((a, b) => {
                         const getScore = (dateStr) => {
@@ -939,6 +969,9 @@
                                 {activeMatches.length > 0 && (
                                     <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse shrink-0" title="Hay partidos en vivo"></span>
                                 )}
+                                {activeMatches.length === 0 && delayedMatches.length > 0 && (
+                                    <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse shrink-0" title="Hay partidos demorados"></span>
+                                )}
                             </button>
                             <button 
                                 onClick={() => setActiveTab('estadisticas')}
@@ -957,7 +990,7 @@
 
                     <main className="flex-1 p-4 mt-2">
                         {(activeTab === 'grupos' || activeTab === 'cruces') && (
-                            <TodayMatchesCarousel matches={currentDayMatches} todayLabel={todayLabel} />
+                            <TodayMatchesCarousel matches={currentDayMatches} todayLabel={todayLabel} hasLive={activeMatches.length > 0} hasDelayed={delayedMatches.length > 0} />
                         )}
 
                         {activeTab === 'cruces' && <KnockoutView resolvedMatches={resolvedKnockouts} />}
