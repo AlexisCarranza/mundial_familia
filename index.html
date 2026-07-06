@@ -227,7 +227,7 @@
             //Brasil vs Noruega
             { id: 'm91', round: 'octavos', homeRef: 'm76', awayRef: 'm78', date: '5 Jul', time: '15:00', venue: 'Nueva York/NJ', hGoals: 1, aGoals: 2, played: true, extraTime: false, penalties: false, hPens: 0, aPens: 0, penSequence: { home: [], away: [] }, scorers: { home: ["Neymar Jr. 90+10'"], away: ["E. Haaland 79'" , "E. Haaland 89'"] } },
             //Mexico vs Inglaterra 
-            { id: 'm92', round: 'octavos', homeRef: 'm79', awayRef: 'm80', date: '5 Jul', time: '20:00', venue: 'CDMX', hGoals: 1, aGoals: 2, played: 'live', extraTime: false, penalties: false, hPens: 0, aPens: 0, penSequence: { home: [], away: [] }, scorers: { home: ["J. Quiñones 42'"], away: ["J. Bellingham 36'" , "J. Bellingham 38'"] } },
+            { id: 'm92', round: 'octavos', homeRef: 'm79', awayRef: 'm80', date: '5 Jul', time: '20:00', venue: 'CDMX', hGoals: 1, aGoals: 2, played: 'live', extraTime: false, penalties: false, hPens: 0, aPens: 0, penSequence: { home: [], away: [] }, scorers: { home: ["J. Quiñones 42'"], away: ["J. Bellingham 36'" , "J. Bellingham 38'" ] } },
             // Portugal vs España
             { id: 'm93', round: 'octavos', homeRef: 'm83', awayRef: 'm84', date: '6 Jul', time: '14:00', venue: 'Dallas', hGoals: 0, aGoals: 0, played: false, extraTime: false, penalties: false, hPens: 0, aPens: 0, penSequence: { home: [], away: [] }, scorers: { home: [], away: [] } },
             // USA vs Belgica 
@@ -380,6 +380,27 @@
         const isExtraTime = (m) => m.extraTime === true;
         const isPenalties = (m) => m.penalties === true;
 
+        // Agrupa los goles por jugador: si un jugador anotó varias veces,
+        // su nombre aparece una sola vez con todos sus minutos y un balón ⚽ por gol.
+        // Ejemplo: ["K. Mbappé 45'", "K. Mbappé 90+2'"] → { name: "K. Mbappé", minutes: "45', 90+2'", count: 2 }
+        const groupScorers = (list) => {
+            if (!list || list.length === 0) return [];
+            const groups = [];
+            list.forEach(entry => {
+                const match = entry.match(/^(.*?)\s+(\d+(?:\+\d+)?'.*)$/);
+                const name = match ? match[1].trim() : entry.trim();
+                const minute = match ? match[2].trim() : '';
+                const existing = groups.find(g => g.name === name);
+                if (existing) {
+                    existing.minutes.push(minute);
+                    existing.count++;
+                } else {
+                    groups.push({ name, minutes: [minute], count: 1 });
+                }
+            });
+            return groups;
+        };
+
         const MatchCard = ({ match: m }) => {
             const isTBD = (name) => !name || name.includes('TBD') || name.includes('Ganador') || name.includes('Perdedor');
             const isColombia = (name) => name === 'Colombia';
@@ -503,17 +524,17 @@
                             {m.scorers && (m.scorers.home.length > 0 || m.scorers.away.length > 0) && hasScore && (
                                 <div className="flex justify-between items-start mt-1.5 pt-1 border-t border-gray-200/60 w-full">
                                     <div className="flex-1 flex flex-col items-end pr-1 min-w-0">
-                                        {m.scorers.home.map((s, idx) => (
+                                        {groupScorers(m.scorers.home).map((g, idx) => (
                                             <span key={`h-${idx}`} className={`text-[9px] truncate flex items-center gap-1 mb-0.5 ${isColombia(m.home) ? 'text-blue-900 font-bold' : (isLive ? 'text-red-900/80 font-medium' : 'text-gray-500 font-medium')}`}>
-                                                {s} <span className="text-[7px]">⚽</span>
+                                                {g.name} {g.minutes.join(', ')} <span className="text-[7px]">{'⚽'.repeat(g.count)}</span>
                                             </span>
                                         ))}
                                     </div>
                                     <div className="min-w-[70px] shrink-0"></div>
                                     <div className="flex-1 flex flex-col items-start pl-1 min-w-0">
-                                        {m.scorers.away.map((s, idx) => (
+                                        {groupScorers(m.scorers.away).map((g, idx) => (
                                             <span key={`a-${idx}`} className={`text-[9px] truncate flex items-center gap-1 mb-0.5 ${isColombia(m.away) ? 'text-blue-900 font-bold' : (isLive ? 'text-red-900/80 font-medium' : 'text-gray-500 font-medium')}`}>
-                                                <span className="text-[7px]">⚽</span> {s}
+                                                <span className="text-[7px]">{'⚽'.repeat(g.count)}</span> {g.name} {g.minutes.join(', ')}
                                             </span>
                                         ))}
                                     </div>
